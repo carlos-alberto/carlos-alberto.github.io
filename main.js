@@ -3746,6 +3746,203 @@ var _elm_lang$core$Result$fromMaybe = F2(
 		}
 	});
 
+var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
+var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
+var _elm_lang$core$Task$spawnCmd = F2(
+	function (router, _p0) {
+		var _p1 = _p0;
+		return _elm_lang$core$Native_Scheduler.spawn(
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Platform$sendToApp(router),
+				_p1._0));
+	});
+var _elm_lang$core$Task$fail = _elm_lang$core$Native_Scheduler.fail;
+var _elm_lang$core$Task$mapError = F2(
+	function (convert, task) {
+		return A2(
+			_elm_lang$core$Task$onError,
+			function (_p2) {
+				return _elm_lang$core$Task$fail(
+					convert(_p2));
+			},
+			task);
+	});
+var _elm_lang$core$Task$succeed = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return _elm_lang$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return _elm_lang$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map3 = F4(
+	function (func, taskA, taskB, taskC) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return _elm_lang$core$Task$succeed(
+									A3(func, a, b, c));
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map4 = F5(
+	function (func, taskA, taskB, taskC, taskD) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return _elm_lang$core$Task$succeed(
+											A4(func, a, b, c, d));
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$map5 = F6(
+	function (func, taskA, taskB, taskC, taskD, taskE) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Task$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Task$andThen,
+											function (e) {
+												return _elm_lang$core$Task$succeed(
+													A5(func, a, b, c, d, e));
+											},
+											taskE);
+									},
+									taskD);
+							},
+							taskC);
+					},
+					taskB);
+			},
+			taskA);
+	});
+var _elm_lang$core$Task$sequence = function (tasks) {
+	var _p3 = tasks;
+	if (_p3.ctor === '[]') {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Task$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p3._0,
+			_elm_lang$core$Task$sequence(_p3._1));
+	}
+};
+var _elm_lang$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			_elm_lang$core$Task$map,
+			function (_p4) {
+				return {ctor: '_Tuple0'};
+			},
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					_elm_lang$core$Task$spawnCmd(router),
+					commands)));
+	});
+var _elm_lang$core$Task$init = _elm_lang$core$Task$succeed(
+	{ctor: '_Tuple0'});
+var _elm_lang$core$Task$onSelfMsg = F3(
+	function (_p7, _p6, _p5) {
+		return _elm_lang$core$Task$succeed(
+			{ctor: '_Tuple0'});
+	});
+var _elm_lang$core$Task$command = _elm_lang$core$Native_Platform.leaf('Task');
+var _elm_lang$core$Task$Perform = function (a) {
+	return {ctor: 'Perform', _0: a};
+};
+var _elm_lang$core$Task$perform = F2(
+	function (toMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(_elm_lang$core$Task$map, toMessage, task)));
+	});
+var _elm_lang$core$Task$attempt = F2(
+	function (resultToMessage, task) {
+		return _elm_lang$core$Task$command(
+			_elm_lang$core$Task$Perform(
+				A2(
+					_elm_lang$core$Task$onError,
+					function (_p8) {
+						return _elm_lang$core$Task$succeed(
+							resultToMessage(
+								_elm_lang$core$Result$Err(_p8)));
+					},
+					A2(
+						_elm_lang$core$Task$andThen,
+						function (_p9) {
+							return _elm_lang$core$Task$succeed(
+								resultToMessage(
+									_elm_lang$core$Result$Ok(_p9)));
+						},
+						task))));
+	});
+var _elm_lang$core$Task$cmdMap = F2(
+	function (tagger, _p10) {
+		var _p11 = _p10;
+		return _elm_lang$core$Task$Perform(
+			A2(_elm_lang$core$Task$map, tagger, _p11._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Debug = function() {
@@ -5077,6 +5274,221 @@ var _elm_lang$core$Dict$diff = F2(
 			t2);
 	});
 
+//import Native.Scheduler //
+
+var _elm_lang$core$Native_Time = function() {
+
+var now = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+{
+	callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
+});
+
+function setInterval_(interval, task)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var id = setInterval(function() {
+			_elm_lang$core$Native_Scheduler.rawSpawn(task);
+		}, interval);
+
+		return function() { clearInterval(id); };
+	});
+}
+
+return {
+	now: now,
+	setInterval_: F2(setInterval_)
+};
+
+}();
+var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
+var _elm_lang$core$Time$spawnHelp = F3(
+	function (router, intervals, processes) {
+		var _p0 = intervals;
+		if (_p0.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(processes);
+		} else {
+			var _p1 = _p0._0;
+			var spawnRest = function (id) {
+				return A3(
+					_elm_lang$core$Time$spawnHelp,
+					router,
+					_p0._1,
+					A3(_elm_lang$core$Dict$insert, _p1, id, processes));
+			};
+			var spawnTimer = _elm_lang$core$Native_Scheduler.spawn(
+				A2(
+					_elm_lang$core$Time$setInterval,
+					_p1,
+					A2(_elm_lang$core$Platform$sendToSelf, router, _p1)));
+			return A2(_elm_lang$core$Task$andThen, spawnRest, spawnTimer);
+		}
+	});
+var _elm_lang$core$Time$addMySub = F2(
+	function (_p2, state) {
+		var _p3 = _p2;
+		var _p6 = _p3._1;
+		var _p5 = _p3._0;
+		var _p4 = A2(_elm_lang$core$Dict$get, _p5, state);
+		if (_p4.ctor === 'Nothing') {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{
+					ctor: '::',
+					_0: _p6,
+					_1: {ctor: '[]'}
+				},
+				state);
+		} else {
+			return A3(
+				_elm_lang$core$Dict$insert,
+				_p5,
+				{ctor: '::', _0: _p6, _1: _p4._0},
+				state);
+		}
+	});
+var _elm_lang$core$Time$inMilliseconds = function (t) {
+	return t;
+};
+var _elm_lang$core$Time$millisecond = 1;
+var _elm_lang$core$Time$second = 1000 * _elm_lang$core$Time$millisecond;
+var _elm_lang$core$Time$minute = 60 * _elm_lang$core$Time$second;
+var _elm_lang$core$Time$hour = 60 * _elm_lang$core$Time$minute;
+var _elm_lang$core$Time$inHours = function (t) {
+	return t / _elm_lang$core$Time$hour;
+};
+var _elm_lang$core$Time$inMinutes = function (t) {
+	return t / _elm_lang$core$Time$minute;
+};
+var _elm_lang$core$Time$inSeconds = function (t) {
+	return t / _elm_lang$core$Time$second;
+};
+var _elm_lang$core$Time$now = _elm_lang$core$Native_Time.now;
+var _elm_lang$core$Time$onSelfMsg = F3(
+	function (router, interval, state) {
+		var _p7 = A2(_elm_lang$core$Dict$get, interval, state.taggers);
+		if (_p7.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var tellTaggers = function (time) {
+				return _elm_lang$core$Task$sequence(
+					A2(
+						_elm_lang$core$List$map,
+						function (tagger) {
+							return A2(
+								_elm_lang$core$Platform$sendToApp,
+								router,
+								tagger(time));
+						},
+						_p7._0));
+			};
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p8) {
+					return _elm_lang$core$Task$succeed(state);
+				},
+				A2(_elm_lang$core$Task$andThen, tellTaggers, _elm_lang$core$Time$now));
+		}
+	});
+var _elm_lang$core$Time$subscription = _elm_lang$core$Native_Platform.leaf('Time');
+var _elm_lang$core$Time$State = F2(
+	function (a, b) {
+		return {taggers: a, processes: b};
+	});
+var _elm_lang$core$Time$init = _elm_lang$core$Task$succeed(
+	A2(_elm_lang$core$Time$State, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty));
+var _elm_lang$core$Time$onEffects = F3(
+	function (router, subs, _p9) {
+		var _p10 = _p9;
+		var rightStep = F3(
+			function (_p12, id, _p11) {
+				var _p13 = _p11;
+				return {
+					ctor: '_Tuple3',
+					_0: _p13._0,
+					_1: _p13._1,
+					_2: A2(
+						_elm_lang$core$Task$andThen,
+						function (_p14) {
+							return _p13._2;
+						},
+						_elm_lang$core$Native_Scheduler.kill(id))
+				};
+			});
+		var bothStep = F4(
+			function (interval, taggers, id, _p15) {
+				var _p16 = _p15;
+				return {
+					ctor: '_Tuple3',
+					_0: _p16._0,
+					_1: A3(_elm_lang$core$Dict$insert, interval, id, _p16._1),
+					_2: _p16._2
+				};
+			});
+		var leftStep = F3(
+			function (interval, taggers, _p17) {
+				var _p18 = _p17;
+				return {
+					ctor: '_Tuple3',
+					_0: {ctor: '::', _0: interval, _1: _p18._0},
+					_1: _p18._1,
+					_2: _p18._2
+				};
+			});
+		var newTaggers = A3(_elm_lang$core$List$foldl, _elm_lang$core$Time$addMySub, _elm_lang$core$Dict$empty, subs);
+		var _p19 = A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			newTaggers,
+			_p10.processes,
+			{
+				ctor: '_Tuple3',
+				_0: {ctor: '[]'},
+				_1: _elm_lang$core$Dict$empty,
+				_2: _elm_lang$core$Task$succeed(
+					{ctor: '_Tuple0'})
+			});
+		var spawnList = _p19._0;
+		var existingDict = _p19._1;
+		var killTask = _p19._2;
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (newProcesses) {
+				return _elm_lang$core$Task$succeed(
+					A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
+			},
+			A2(
+				_elm_lang$core$Task$andThen,
+				function (_p20) {
+					return A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict);
+				},
+				killTask));
+	});
+var _elm_lang$core$Time$Every = F2(
+	function (a, b) {
+		return {ctor: 'Every', _0: a, _1: b};
+	});
+var _elm_lang$core$Time$every = F2(
+	function (interval, tagger) {
+		return _elm_lang$core$Time$subscription(
+			A2(_elm_lang$core$Time$Every, interval, tagger));
+	});
+var _elm_lang$core$Time$subMap = F2(
+	function (f, _p21) {
+		var _p22 = _p21;
+		return A2(
+			_elm_lang$core$Time$Every,
+			_p22._0,
+			function (_p23) {
+				return f(
+					_p22._1(_p23));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
+
 var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
 var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
 
@@ -5729,6 +6141,10 @@ var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive(
 var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
 var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
+
+var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
+var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
+var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
 
 var _elm_lang$core$Tuple$mapSecond = F2(
 	function (func, _p0) {
@@ -8260,6 +8676,367 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _elm_lang$http$Native_Http = function() {
+
+
+// ENCODING AND DECODING
+
+function encodeUri(string)
+{
+	return encodeURIComponent(string);
+}
+
+function decodeUri(string)
+{
+	try
+	{
+		return _elm_lang$core$Maybe$Just(decodeURIComponent(string));
+	}
+	catch(e)
+	{
+		return _elm_lang$core$Maybe$Nothing;
+	}
+}
+
+
+// SEND REQUEST
+
+function toTask(request, maybeProgress)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var xhr = new XMLHttpRequest();
+
+		configureProgress(xhr, maybeProgress);
+
+		xhr.addEventListener('error', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NetworkError' }));
+		});
+		xhr.addEventListener('timeout', function() {
+			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'Timeout' }));
+		});
+		xhr.addEventListener('load', function() {
+			callback(handleResponse(xhr, request.expect.responseToResult));
+		});
+
+		try
+		{
+			xhr.open(request.method, request.url, true);
+		}
+		catch (e)
+		{
+			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'BadUrl', _0: request.url }));
+		}
+
+		configureRequest(xhr, request);
+		send(xhr, request.body);
+
+		return function() { xhr.abort(); };
+	});
+}
+
+function configureProgress(xhr, maybeProgress)
+{
+	if (maybeProgress.ctor === 'Nothing')
+	{
+		return;
+	}
+
+	xhr.addEventListener('progress', function(event) {
+		if (!event.lengthComputable)
+		{
+			return;
+		}
+		_elm_lang$core$Native_Scheduler.rawSpawn(maybeProgress._0({
+			bytes: event.loaded,
+			bytesExpected: event.total
+		}));
+	});
+}
+
+function configureRequest(xhr, request)
+{
+	function setHeader(pair)
+	{
+		xhr.setRequestHeader(pair._0, pair._1);
+	}
+
+	A2(_elm_lang$core$List$map, setHeader, request.headers);
+	xhr.responseType = request.expect.responseType;
+	xhr.withCredentials = request.withCredentials;
+
+	if (request.timeout.ctor === 'Just')
+	{
+		xhr.timeout = request.timeout._0;
+	}
+}
+
+function send(xhr, body)
+{
+	switch (body.ctor)
+	{
+		case 'EmptyBody':
+			xhr.send();
+			return;
+
+		case 'StringBody':
+			xhr.setRequestHeader('Content-Type', body._0);
+			xhr.send(body._1);
+			return;
+
+		case 'FormDataBody':
+			xhr.send(body._0);
+			return;
+	}
+}
+
+
+// RESPONSES
+
+function handleResponse(xhr, responseToResult)
+{
+	var response = toResponse(xhr);
+
+	if (xhr.status < 200 || 300 <= xhr.status)
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadStatus',
+			_0: response
+		});
+	}
+
+	var result = responseToResult(response);
+
+	if (result.ctor === 'Ok')
+	{
+		return _elm_lang$core$Native_Scheduler.succeed(result._0);
+	}
+	else
+	{
+		response.body = xhr.responseText;
+		return _elm_lang$core$Native_Scheduler.fail({
+			ctor: 'BadPayload',
+			_0: result._0,
+			_1: response
+		});
+	}
+}
+
+function toResponse(xhr)
+{
+	return {
+		status: { code: xhr.status, message: xhr.statusText },
+		headers: parseHeaders(xhr.getAllResponseHeaders()),
+		url: xhr.responseURL,
+		body: xhr.response
+	};
+}
+
+function parseHeaders(rawHeaders)
+{
+	var headers = _elm_lang$core$Dict$empty;
+
+	if (!rawHeaders)
+	{
+		return headers;
+	}
+
+	var headerPairs = rawHeaders.split('\u000d\u000a');
+	for (var i = headerPairs.length; i--; )
+	{
+		var headerPair = headerPairs[i];
+		var index = headerPair.indexOf('\u003a\u0020');
+		if (index > 0)
+		{
+			var key = headerPair.substring(0, index);
+			var value = headerPair.substring(index + 2);
+
+			headers = A3(_elm_lang$core$Dict$update, key, function(oldValue) {
+				if (oldValue.ctor === 'Just')
+				{
+					return _elm_lang$core$Maybe$Just(value + ', ' + oldValue._0);
+				}
+				return _elm_lang$core$Maybe$Just(value);
+			}, headers);
+		}
+	}
+
+	return headers;
+}
+
+
+// EXPECTORS
+
+function expectStringResponse(responseToResult)
+{
+	return {
+		responseType: 'text',
+		responseToResult: responseToResult
+	};
+}
+
+function mapExpect(func, expect)
+{
+	return {
+		responseType: expect.responseType,
+		responseToResult: function(response) {
+			var convertedResponse = expect.responseToResult(response);
+			return A2(_elm_lang$core$Result$map, func, convertedResponse);
+		}
+	};
+}
+
+
+// BODY
+
+function multipart(parts)
+{
+	var formData = new FormData();
+
+	while (parts.ctor !== '[]')
+	{
+		var part = parts._0;
+		formData.append(part._0, part._1);
+		parts = parts._1;
+	}
+
+	return { ctor: 'FormDataBody', _0: formData };
+}
+
+return {
+	toTask: F2(toTask),
+	expectStringResponse: expectStringResponse,
+	mapExpect: F2(mapExpect),
+	multipart: multipart,
+	encodeUri: encodeUri,
+	decodeUri: decodeUri
+};
+
+}();
+
+var _elm_lang$http$Http_Internal$map = F2(
+	function (func, request) {
+		return _elm_lang$core$Native_Utils.update(
+			request,
+			{
+				expect: A2(_elm_lang$http$Native_Http.mapExpect, func, request.expect)
+			});
+	});
+var _elm_lang$http$Http_Internal$RawRequest = F7(
+	function (a, b, c, d, e, f, g) {
+		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
+	});
+var _elm_lang$http$Http_Internal$Request = function (a) {
+	return {ctor: 'Request', _0: a};
+};
+var _elm_lang$http$Http_Internal$Expect = {ctor: 'Expect'};
+var _elm_lang$http$Http_Internal$FormDataBody = {ctor: 'FormDataBody'};
+var _elm_lang$http$Http_Internal$StringBody = F2(
+	function (a, b) {
+		return {ctor: 'StringBody', _0: a, _1: b};
+	});
+var _elm_lang$http$Http_Internal$EmptyBody = {ctor: 'EmptyBody'};
+var _elm_lang$http$Http_Internal$Header = F2(
+	function (a, b) {
+		return {ctor: 'Header', _0: a, _1: b};
+	});
+
+var _elm_lang$http$Http$decodeUri = _elm_lang$http$Native_Http.decodeUri;
+var _elm_lang$http$Http$encodeUri = _elm_lang$http$Native_Http.encodeUri;
+var _elm_lang$http$Http$expectStringResponse = _elm_lang$http$Native_Http.expectStringResponse;
+var _elm_lang$http$Http$expectJson = function (decoder) {
+	return _elm_lang$http$Http$expectStringResponse(
+		function (response) {
+			return A2(_elm_lang$core$Json_Decode$decodeString, decoder, response.body);
+		});
+};
+var _elm_lang$http$Http$expectString = _elm_lang$http$Http$expectStringResponse(
+	function (response) {
+		return _elm_lang$core$Result$Ok(response.body);
+	});
+var _elm_lang$http$Http$multipartBody = _elm_lang$http$Native_Http.multipart;
+var _elm_lang$http$Http$stringBody = _elm_lang$http$Http_Internal$StringBody;
+var _elm_lang$http$Http$jsonBody = function (value) {
+	return A2(
+		_elm_lang$http$Http_Internal$StringBody,
+		'application/json',
+		A2(_elm_lang$core$Json_Encode$encode, 0, value));
+};
+var _elm_lang$http$Http$emptyBody = _elm_lang$http$Http_Internal$EmptyBody;
+var _elm_lang$http$Http$header = _elm_lang$http$Http_Internal$Header;
+var _elm_lang$http$Http$request = _elm_lang$http$Http_Internal$Request;
+var _elm_lang$http$Http$post = F3(
+	function (url, body, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {ctor: '[]'},
+				url: url,
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$get = F2(
+	function (url, decoder) {
+		return _elm_lang$http$Http$request(
+			{
+				method: 'GET',
+				headers: {ctor: '[]'},
+				url: url,
+				body: _elm_lang$http$Http$emptyBody,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _elm_lang$http$Http$getString = function (url) {
+	return _elm_lang$http$Http$request(
+		{
+			method: 'GET',
+			headers: {ctor: '[]'},
+			url: url,
+			body: _elm_lang$http$Http$emptyBody,
+			expect: _elm_lang$http$Http$expectString,
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+};
+var _elm_lang$http$Http$toTask = function (_p0) {
+	var _p1 = _p0;
+	return A2(_elm_lang$http$Native_Http.toTask, _p1._0, _elm_lang$core$Maybe$Nothing);
+};
+var _elm_lang$http$Http$send = F2(
+	function (resultToMessage, request) {
+		return A2(
+			_elm_lang$core$Task$attempt,
+			resultToMessage,
+			_elm_lang$http$Http$toTask(request));
+	});
+var _elm_lang$http$Http$Response = F4(
+	function (a, b, c, d) {
+		return {url: a, status: b, headers: c, body: d};
+	});
+var _elm_lang$http$Http$BadPayload = F2(
+	function (a, b) {
+		return {ctor: 'BadPayload', _0: a, _1: b};
+	});
+var _elm_lang$http$Http$BadStatus = function (a) {
+	return {ctor: 'BadStatus', _0: a};
+};
+var _elm_lang$http$Http$NetworkError = {ctor: 'NetworkError'};
+var _elm_lang$http$Http$Timeout = {ctor: 'Timeout'};
+var _elm_lang$http$Http$BadUrl = function (a) {
+	return {ctor: 'BadUrl', _0: a};
+};
+var _elm_lang$http$Http$StringPart = F2(
+	function (a, b) {
+		return {ctor: 'StringPart', _0: a, _1: b};
+	});
+var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
+
 var _fapian$elm_html_aria$Html_Attributes_Aria$role = _elm_lang$html$Html_Attributes$attribute('role');
 var _fapian$elm_html_aria$Html_Attributes_Aria$ariaSelected = _elm_lang$html$Html_Attributes$attribute('aria-selected');
 var _fapian$elm_html_aria$Html_Attributes_Aria$ariaLive = _elm_lang$html$Html_Attributes$attribute('aria-live');
@@ -8478,77 +9255,79 @@ var _user$project$FaultSelector$faultSelectorView = function (msg) {
 
 var _user$project$Projects$projectToParts = function (project) {
 	var _p0 = project;
-	if (_p0.ctor === 'P32S') {
-		return {
-			ctor: '::',
-			_0: {id: 'L0443943', description: '1RS BACK W/SIAB, LH'},
-			_1: {
+	switch (_p0.ctor) {
+		case 'P32S':
+			return {
 				ctor: '::',
-				_0: {id: 'L0443944', description: '1RS BACK W/SIAB, RH'},
+				_0: {id: 'L0443943', description: '1RS BACK W/SIAB, LH'},
 				_1: {
 					ctor: '::',
-					_0: {id: 'L0443945', description: '1RS BACK W/SIAB, LH, CLIMATE'},
+					_0: {id: 'L0443944', description: '1RS BACK W/SIAB, RH'},
 					_1: {
 						ctor: '::',
-						_0: {id: 'L0443953', description: '1RS BACK W/SIAB, RH, CLIMATE'},
+						_0: {id: 'L0443945', description: '1RS BACK W/SIAB, LH, CLIMATE'},
 						_1: {
 							ctor: '::',
-							_0: {id: 'L0443955', description: '1RS CUSH'},
+							_0: {id: 'L0443953', description: '1RS BACK W/SIAB, RH, CLIMATE'},
 							_1: {
 								ctor: '::',
-								_0: {id: 'L0443956', description: '1RS CUSH, CLIMATE'},
+								_0: {id: 'L0443955', description: '1RS CUSH'},
 								_1: {
 									ctor: '::',
-									_0: {id: 'L0446425', description: '3RS CUSH, LH'},
+									_0: {id: 'L0443956', description: '1RS CUSH, CLIMATE'},
 									_1: {
 										ctor: '::',
-										_0: {id: 'L0446426', description: '3RS CUSH, RH'},
+										_0: {id: 'L0446425', description: '3RS CUSH, LH'},
 										_1: {
 											ctor: '::',
-											_0: {id: 'L0446429', description: '3RS BACK, LH'},
+											_0: {id: 'L0446426', description: '3RS CUSH, RH'},
 											_1: {
 												ctor: '::',
-												_0: {id: 'L0446430', description: '3RS BACK, RH'},
+												_0: {id: 'L0446429', description: '3RS BACK, LH'},
 												_1: {
 													ctor: '::',
-													_0: {id: 'L0452887', description: '1RS BACK W/SIAB, LH, NON BACKBOARD VARIANT'},
+													_0: {id: 'L0446430', description: '3RS BACK, RH'},
 													_1: {
 														ctor: '::',
-														_0: {id: 'L0452888', description: '1RS BACK W/SIAB, RH, NON BACKBOARD VARIANT'},
+														_0: {id: 'L0452887', description: '1RS BACK W/SIAB, LH, NON BACKBOARD VARIANT'},
 														_1: {
 															ctor: '::',
-															_0: {id: 'L0452892', description: '1RS CUSH, NAS PASSENGER'},
+															_0: {id: 'L0452888', description: '1RS BACK W/SIAB, RH, NON BACKBOARD VARIANT'},
 															_1: {
 																ctor: '::',
-																_0: {id: 'L0452894', description: '1RS CUSH, CLIMATE NAS PASSENGER'},
+																_0: {id: 'L0452892', description: '1RS CUSH, NAS PASSENGER'},
 																_1: {
 																	ctor: '::',
-																	_0: {id: 'L0455367', description: '2RS CUSH, 40% RH'},
+																	_0: {id: 'L0452894', description: '1RS CUSH, CLIMATE NAS PASSENGER'},
 																	_1: {
 																		ctor: '::',
-																		_0: {id: 'L0455369', description: '2RS CUSH, 40% RH, CLIMATE'},
+																		_0: {id: 'L0455367', description: '2RS CUSH, 40% RH'},
 																		_1: {
 																			ctor: '::',
-																			_0: {id: 'L0455371', description: '2RS CUSH, 60% LH'},
+																			_0: {id: 'L0455369', description: '2RS CUSH, 40% RH, CLIMATE'},
 																			_1: {
 																				ctor: '::',
-																				_0: {id: 'L0455374', description: '2RS CUSH, 60% LH, CLIMATE'},
+																				_0: {id: 'L0455371', description: '2RS CUSH, 60% LH'},
 																				_1: {
 																					ctor: '::',
-																					_0: {id: 'L0455382', description: '2RS BACK, 40% RH, 7 SEAT'},
+																					_0: {id: 'L0455374', description: '2RS CUSH, 60% LH, CLIMATE'},
 																					_1: {
 																						ctor: '::',
-																						_0: {id: 'L0455386', description: '2RS BACK, 40% RH, 7 SEAT CLIMATE'},
+																						_0: {id: 'L0455382', description: '2RS BACK, 40% RH, 7 SEAT'},
 																						_1: {
 																							ctor: '::',
-																							_0: {id: 'L0455389', description: '2RS BACK, 60% LH, 7 SEAT'},
+																							_0: {id: 'L0455386', description: '2RS BACK, 40% RH, 7 SEAT CLIMATE'},
 																							_1: {
 																								ctor: '::',
-																								_0: {id: 'L0455390', description: '2RS BACK, 60% LH, 7 SEAT CLIMATE'},
+																								_0: {id: 'L0455389', description: '2RS BACK, 60% LH, 7 SEAT'},
 																								_1: {
 																									ctor: '::',
-																									_0: {id: 'L0455394', description: '2RS BACK, 20%, UPPER'},
-																									_1: {ctor: '[]'}
+																									_0: {id: 'L0455390', description: '2RS BACK, 60% LH, 7 SEAT CLIMATE'},
+																									_1: {
+																										ctor: '::',
+																										_0: {id: 'L0455394', description: '2RS BACK, 20%, UPPER'},
+																										_1: {ctor: '[]'}
+																									}
 																								}
 																							}
 																						}
@@ -8570,70 +9349,70 @@ var _user$project$Projects$projectToParts = function (project) {
 						}
 					}
 				}
-			}
-		};
-	} else {
-		return {
-			ctor: '::',
-			_0: {id: 'L0419490', description: '2R Back 100% With Armrest'},
-			_1: {
+			};
+		case 'X260':
+			return {
 				ctor: '::',
-				_0: {id: 'L0419491', description: '2R Back 40% RH'},
+				_0: {id: 'L0419490', description: '2R BACK 100% WITH ARMREST'},
 				_1: {
 					ctor: '::',
-					_0: {id: 'L0419492', description: '2R Back 40% LH'},
+					_0: {id: 'L0419491', description: '2R BACK 40% RH'},
 					_1: {
 						ctor: '::',
-						_0: {id: 'L0419493', description: '2R Cushion 100%'},
+						_0: {id: 'L0419492', description: '2R BACK 40% LH'},
 						_1: {
 							ctor: '::',
-							_0: {id: 'L0427672', description: '1R Back LH Standard (No Climate)'},
+							_0: {id: 'L0419493', description: '2R CUSHION 100%'},
 							_1: {
 								ctor: '::',
-								_0: {id: 'L0427673', description: '1R Back RH Standard (No Climate)'},
+								_0: {id: 'L0427672', description: '1R BACK LH STANDARD (NO CLIMATE)'},
 								_1: {
 									ctor: '::',
-									_0: {id: 'L0427674', description: '1R Back With Climate LH'},
+									_0: {id: 'L0427673', description: '1R BACK RH STANDARD (NO CLIMATE)'},
 									_1: {
 										ctor: '::',
-										_0: {id: 'L0427675', description: '1R Back With Climate RH'},
+										_0: {id: 'L0427674', description: '1R BACK WITH CLIMATE LH'},
 										_1: {
 											ctor: '::',
-											_0: {id: 'L0439488', description: '2R Rear RH Bolster (used with 40%)'},
+											_0: {id: 'L0427675', description: '1R BACK WITH CLIMATE RH'},
 											_1: {
 												ctor: '::',
-												_0: {id: 'L0439489', description: '2R Rear LH Bolster (used with 40%)'},
+												_0: {id: 'L0439488', description: '2R REAR RH BOLSTER (USED WITH 40%)'},
 												_1: {
 													ctor: '::',
-													_0: {id: 'L0447791', description: '2R Back 100% Without Armrest'},
+													_0: {id: 'L0439489', description: '2R REAR LH BOLSTER (USED WITH 40%)'},
 													_1: {
 														ctor: '::',
-														_0: {id: 'L0474725', description: '1R Cushion Comfort Climate'},
+														_0: {id: 'L0447791', description: '2R BACK 100% WITHOUT ARMREST'},
 														_1: {
 															ctor: '::',
-															_0: {id: 'L0474726', description: '1R Cushion Front Cushion (Common) Extension Climate'},
+															_0: {id: 'L0474725', description: '1R CUSHION COMFORT CLIMATE'},
 															_1: {
 																ctor: '::',
-																_0: {id: 'L0474727', description: '1R Cushion Front Cushion (Common) Std Extension'},
+																_0: {id: 'L0474726', description: '1R CUSHION FRONT CUSHION (COMMON) EXTENSION CLIMATE'},
 																_1: {
 																	ctor: '::',
-																	_0: {id: 'L0474728', description: '1R Cushion Comfort'},
+																	_0: {id: 'L0474727', description: '1R CUSHION FRONT CUSHION (COMMON) STD EXTENSION'},
 																	_1: {
 																		ctor: '::',
-																		_0: {id: 'L0474729', description: '1R Back Front LH Squab LH Sport Climate'},
+																		_0: {id: 'L0474728', description: '1R CUSHION COMFORT'},
 																		_1: {
 																			ctor: '::',
-																			_0: {id: 'L0474730', description: '1R Back Front LH Squab LH Sport'},
+																			_0: {id: 'L0474729', description: '1R BACK FRONT LH SQUAB LH SPORT CLIMATE'},
 																			_1: {
 																				ctor: '::',
-																				_0: {id: 'L0474731', description: '1R Back Front RH Squab RH Sport Climate'},
+																				_0: {id: 'L0474730', description: '1R BACK FRONT LH SQUAB LH SPORT'},
 																				_1: {
 																					ctor: '::',
-																					_0: {id: 'L0474732', description: '1R Back Front RH Squab RH Sport'},
+																					_0: {id: 'L0474731', description: '1R BACK FRONT RH SQUAB RH SPORT CLIMATE'},
 																					_1: {
 																						ctor: '::',
-																						_0: {id: 'L0479674', description: '2R Back 20% Lower'},
-																						_1: {ctor: '[]'}
+																						_0: {id: 'L0474732', description: '1R BACK FRONT RH SQUAB RH SPORT'},
+																						_1: {
+																							ctor: '::',
+																							_0: {id: 'L0479674', description: '2R BACK 20% LOWER'},
+																							_1: {ctor: '[]'}
+																						}
 																					}
 																				}
 																			}
@@ -8652,8 +9431,291 @@ var _user$project$Projects$projectToParts = function (project) {
 						}
 					}
 				}
-			}
-		};
+			};
+		case 'MY17':
+			return {
+				ctor: '::',
+				_0: {id: 'L0522036', description: '1RS CUSH, LH, FABRIC, MONOFORM, 17MY'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0522038', description: '1RS CUSH, RH, FABRIC, MONOFORM, 17MY'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0522044', description: '1RS CUSH, LH, LEATHER, MONOFORM, 17MY'},
+						_1: {
+							ctor: '::',
+							_0: {id: 'L0522046', description: '1RS CUSH, RH, LEATHER, MONOFORM, 17MY'},
+							_1: {
+								ctor: '::',
+								_0: {id: 'L0522062', description: '1RS BACK W/SIAB, LH, FABRIC, MONOFORM, 17MY'},
+								_1: {
+									ctor: '::',
+									_0: {id: 'L0522068', description: '1RS BACK W/SIAB, LH, DRIVER,LEATHER,MONOFORM,17MY'},
+									_1: {
+										ctor: '::',
+										_0: {id: 'L0522069', description: '1RS BACK W/SIAB, RH, DRIVER,LEATHER,MONOFORM,17MY'},
+										_1: {
+											ctor: '::',
+											_0: {id: 'L0522071', description: '1RS BACK W/SIAB, RH, FABRIC, MONOFORM, 17MY'},
+											_1: {
+												ctor: '::',
+												_0: {id: 'L0529931', description: '2RS BACK 40% RH LEATHER, 17MY'},
+												_1: {
+													ctor: '::',
+													_0: {id: 'L0529933', description: '2RS BACK 60% LH, LEATHER , 17MY'},
+													_1: {
+														ctor: '::',
+														_0: {id: 'L0529934', description: '2RS CUSH, LEATHER, 17MY'},
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			};
+		case 'X761':
+			return {
+				ctor: '::',
+				_0: {id: 'L0452150', description: '2RS BACK, REAR CENTER, 20% WITHOUT ARMREST'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0452151', description: '2RS BACK, RH, BOLSTER'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0452152', description: '2RS BACK, LH, BOLSTER'},
+						_1: {
+							ctor: '::',
+							_0: {id: 'L0468126', description: '2RS BACK, REAR OUTER RH, 40%'},
+							_1: {
+								ctor: '::',
+								_0: {id: 'L0468127', description: '2RS BACK, REAR OUTER LH, 40%'},
+								_1: {
+									ctor: '::',
+									_0: {id: 'L0468173', description: '2RS CUSH, 100% WITH WIRE FRAME'},
+									_1: {
+										ctor: '::',
+										_0: {id: 'L0474733', description: '1RS BACK, RH, COMFORT'},
+										_1: {
+											ctor: '::',
+											_0: {id: 'L0474734', description: '1RS BACK, LH, COMFORT'},
+											_1: {
+												ctor: '::',
+												_0: {id: 'L0474735', description: '1RS BACK, RH, COMFORT CLIMATE'},
+												_1: {
+													ctor: '::',
+													_0: {id: 'L0474736', description: '1RS BACK, LH, COMFORT CLIMATE'},
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			};
+		case 'L462':
+			return {
+				ctor: '::',
+				_0: {id: 'L0443943', description: '1RS BACK W/SIAB, LH'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0443944', description: '1RS BACK W/SIAB, RH'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0443945', description: '1RS BACK W/SIAB, LH, CLIMATE'},
+						_1: {
+							ctor: '::',
+							_0: {id: 'L0443953', description: '1RS BACK W/SIAB, RH, CLIMATE'},
+							_1: {
+								ctor: '::',
+								_0: {id: 'L0443955', description: '1RS CUSH'},
+								_1: {
+									ctor: '::',
+									_0: {id: 'L0443956', description: '1RS CUSH, CLIMATE'},
+									_1: {
+										ctor: '::',
+										_0: {id: 'L0446425', description: '3RS CUSH, LH'},
+										_1: {
+											ctor: '::',
+											_0: {id: 'L0446426', description: '3RS CUSH, RH'},
+											_1: {
+												ctor: '::',
+												_0: {id: 'L0446429', description: '3RS BACK, LH'},
+												_1: {
+													ctor: '::',
+													_0: {id: 'L0446430', description: '3RS BACK, RH'},
+													_1: {
+														ctor: '::',
+														_0: {id: 'L0452887', description: '1RS BACK W/SIAB, LH, NON BACKBOARD VARIANT'},
+														_1: {
+															ctor: '::',
+															_0: {id: 'L0452888', description: '1RS BACK W/SIAB, RH, NON BACKBOARD VARIANT'},
+															_1: {
+																ctor: '::',
+																_0: {id: 'L0452892', description: '1RS CUSH, NAS PASSENGER'},
+																_1: {
+																	ctor: '::',
+																	_0: {id: 'L0452894', description: '1RS CUSH, CLIMATE NAS PASSENGER'},
+																	_1: {
+																		ctor: '::',
+																		_0: {id: 'L0455367', description: '2RS CUSH, 40% RH'},
+																		_1: {
+																			ctor: '::',
+																			_0: {id: 'L0455369', description: '2RS CUSH, 40% RH, CLIMATE'},
+																			_1: {
+																				ctor: '::',
+																				_0: {id: 'L0455371', description: '2RS CUSH, 60% LH'},
+																				_1: {
+																					ctor: '::',
+																					_0: {id: 'L0455374', description: '2RS CUSH, 60% LH, CLIMATE'},
+																					_1: {
+																						ctor: '::',
+																						_0: {id: 'L0455382', description: '2RS BACK, 40% RH, 7 SEAT'},
+																						_1: {
+																							ctor: '::',
+																							_0: {id: 'L0455386', description: '2RS BACK, 40% RH, 7 SEAT CLIMATE'},
+																							_1: {
+																								ctor: '::',
+																								_0: {id: 'L0455389', description: '2RS BACK, 60% LH, 7 SEAT'},
+																								_1: {
+																									ctor: '::',
+																									_0: {id: 'L0455390', description: '2RS BACK, 60% LH, 7 SEAT CLIMATE'},
+																									_1: {
+																										ctor: '::',
+																										_0: {id: 'L0455394', description: '2RS BACK, 20%, UPPER'},
+																										_1: {ctor: '[]'}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			};
+		case 'X152':
+			return {
+				ctor: '::',
+				_0: {id: 'L0486974', description: '1 R CUSHION, HEATED'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0486976', description: '1R BACK, SPORT, HEATED'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0486978', description: '1R BACK, PERFORMANCE, HEATED'},
+						_1: {ctor: '[]'}
+					}
+				}
+			};
+		case 'L560':
+			return {
+				ctor: '::',
+				_0: {id: 'L0469696', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT LH  HI-LINE - CLIMATE'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0469697', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT RH  HI-LINE - CLIMATE'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0469701', description: 'ASM  FOAM PAD - 1RS CUSH  FRONT RH & LH  HI-LINE - EXT CLIMATE'},
+						_1: {
+							ctor: '::',
+							_0: {id: 'L0470346', description: 'ASM  FOAM PAD W/FRAME - 2RS CUSH  BNCH'},
+							_1: {
+								ctor: '::',
+								_0: {id: 'L0473672', description: 'ASM  FOAM PAD - 2RS BACK  REAR  40% LH  HI-LINE'},
+								_1: {
+									ctor: '::',
+									_0: {id: 'L0473673', description: 'ASM  FOAM PAD - 2RS BACK  REAR  40% RH  HI-LINE'},
+									_1: {
+										ctor: '::',
+										_0: {id: 'L0473676', description: 'ASM  FOAM PAD - 2RS BACK  REAR  40% LH  LO-LINE'},
+										_1: {
+											ctor: '::',
+											_0: {id: 'L0473677', description: 'ASM  FOAM PAD - 2RS BACK  REAR  40% RH  LO-LINE'},
+											_1: {
+												ctor: '::',
+												_0: {id: 'L0474508', description: 'ASM  FOAM PAD - 1RS CUSH  FRONT  LO-LINE'},
+												_1: {
+													ctor: '::',
+													_0: {id: 'L0474510', description: 'ASM  FOAM PAD - 1RS CUSH  FRONT  LO-LINE - CLIMATE'},
+													_1: {
+														ctor: '::',
+														_0: {id: 'L0474514', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT LH  LO-LINE'},
+														_1: {
+															ctor: '::',
+															_0: {id: 'L0474515', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT RH  LO-LINE'},
+															_1: {
+																ctor: '::',
+																_0: {id: 'L0484520', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT LH  WITHOUT BACKBOARD'},
+																_1: {
+																	ctor: '::',
+																	_0: {id: 'L0484522', description: 'ASM  FOAM PAD - 1RS BACK W/SIAB  FRONT RH  WITHOUT BACKBOARD'},
+																	_1: {
+																		ctor: '::',
+																		_0: {id: 'L0512226', description: 'FOAM PAD - 2RS BACK  20% LOWER RSE'},
+																		_1: {
+																			ctor: '::',
+																			_0: {id: 'L0526509', description: 'ASM  FOAM PAD W/FRAME - 2RS CUSH  BNCH LOW LINE'},
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			};
+		default:
+			return {
+				ctor: '::',
+				_0: {id: 'L0503213', description: 'ASM, FOAM PAD - 2RS BACK, 40% RH'},
+				_1: {
+					ctor: '::',
+					_0: {id: 'L0503214', description: 'FOAM PAD - 2RS BACK, 40% LH'},
+					_1: {
+						ctor: '::',
+						_0: {id: 'L0503268', description: 'ASM, FOAM PAD - 2RS CUSH, INCLUDING WIRES FRAME'},
+						_1: {
+							ctor: '::',
+							_0: {id: 'L0503674', description: 'FOAM PAD - BOLSTER READ RH, FOR PLASTIC SUBSTRATE'},
+							_1: {
+								ctor: '::',
+								_0: {id: 'L0503675', description: 'FOAM PAD - BOLSTER READ LH, FOR PLASTIC SUBSTRATE'},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			};
 	}
 };
 var _user$project$Projects$partTable = F2(
@@ -8748,16 +9810,35 @@ var _user$project$Projects$partTable = F2(
 	});
 var _user$project$Projects$toString = function (project) {
 	var _p1 = project;
-	if (_p1.ctor === 'P32S') {
-		return 'P32S';
-	} else {
-		return 'X260';
+	switch (_p1.ctor) {
+		case 'P32S':
+			return 'P32S';
+		case 'X260':
+			return 'X260';
+		case 'MY17':
+			return 'MY17';
+		case 'X761':
+			return 'X761';
+		case 'L462':
+			return 'L462';
+		case 'X152':
+			return 'X152';
+		case 'L560':
+			return 'L560';
+		default:
+			return 'X260SB';
 	}
 };
 var _user$project$Projects$Part = F2(
 	function (a, b) {
 		return {id: a, description: b};
 	});
+var _user$project$Projects$X260SB = {ctor: 'X260SB'};
+var _user$project$Projects$L560 = {ctor: 'L560'};
+var _user$project$Projects$X152 = {ctor: 'X152'};
+var _user$project$Projects$L462 = {ctor: 'L462'};
+var _user$project$Projects$X761 = {ctor: 'X761'};
+var _user$project$Projects$MY17 = {ctor: 'MY17'};
 var _user$project$Projects$X260 = {ctor: 'X260'};
 var _user$project$Projects$P32S = {ctor: 'P32S'};
 var _user$project$Projects$allProjects = {
@@ -8766,46 +9847,100 @@ var _user$project$Projects$allProjects = {
 	_1: {
 		ctor: '::',
 		_0: _user$project$Projects$X260,
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: _user$project$Projects$MY17,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Projects$X761,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Projects$L462,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Projects$X152,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Projects$L560,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Projects$X260SB,
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 };
 
+var _user$project$Main$delay = F2(
+	function (time, msg) {
+		return A2(
+			_elm_lang$core$Task$perform,
+			_elm_lang$core$Basics$identity,
+			A2(
+				_elm_lang$core$Task$andThen,
+				_elm_lang$core$Basics$always(
+					_elm_lang$core$Task$succeed(msg)),
+				_elm_lang$core$Process$sleep(time)));
+	});
 var _user$project$Main$currentStateView = function (model) {
-	var reason = function () {
+	var finished = function () {
 		var _p0 = model.toolAndReason;
 		if (_p0.ctor === 'Nothing') {
+			return _elm_lang$html$Html$text('');
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('alert alert-success'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Message logged, back to start in 3 seconds'),
+					_1: {ctor: '[]'}
+				});
+		}
+	}();
+	var reason = function () {
+		var _p1 = model.toolAndReason;
+		if (_p1.ctor === 'Nothing') {
 			return 'Selected Reason: None';
 		} else {
-			return A2(_elm_lang$core$Basics_ops['++'], 'Selected Reason: ', _p0._0.reason);
+			return A2(_elm_lang$core$Basics_ops['++'], 'Selected Reason: ', _p1._0.reason);
 		}
 	}();
 	var tool = function () {
-		var _p1 = model.toolAndReason;
-		if (_p1.ctor === 'Nothing') {
+		var _p2 = model.toolAndReason;
+		if (_p2.ctor === 'Nothing') {
 			return 'Selected Tool: None';
 		} else {
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'Selected Tool: ',
-				_elm_lang$core$Basics$toString(_p1._0.tool));
+				_elm_lang$core$Basics$toString(_p2._0.tool));
 		}
 	}();
 	var part = function () {
-		var _p2 = model.part;
-		if (_p2.ctor === 'Nothing') {
+		var _p3 = model.part;
+		if (_p3.ctor === 'Nothing') {
 			return 'Selected Part: None';
 		} else {
-			var _p3 = _p2._0;
+			var _p4 = _p3._0;
 			return A2(
 				_elm_lang$core$Basics_ops['++'],
 				'Selected Part: ',
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					_p3.description,
+					_p4.description,
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						' (',
-						A2(_elm_lang$core$Basics_ops['++'], _p3.id, ')'))));
+						A2(_elm_lang$core$Basics_ops['++'], _p4.id, ')'))));
 		}
 	}();
 	var project = A2(
@@ -8813,37 +9948,48 @@ var _user$project$Main$currentStateView = function (model) {
 		'Selected Project: ',
 		_user$project$Projects$toString(model.project));
 	return A2(
-		_elm_lang$html$Html$ul,
+		_elm_lang$html$Html$div,
 		{ctor: '[]'},
-		A2(
-			_elm_lang$core$List$map,
-			function (x) {
-				return A2(
-					_elm_lang$html$Html$li,
-					{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{ctor: '[]'},
+				A2(
+					_elm_lang$core$List$map,
+					function (x) {
+						return A2(
+							_elm_lang$html$Html$li,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(x),
+								_1: {ctor: '[]'}
+							});
+					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text(x),
-						_1: {ctor: '[]'}
-					});
-			},
-			{
-				ctor: '::',
-				_0: project,
-				_1: {
-					ctor: '::',
-					_0: part,
-					_1: {
-						ctor: '::',
-						_0: tool,
+						_0: project,
 						_1: {
 							ctor: '::',
-							_0: reason,
-							_1: {ctor: '[]'}
+							_0: part,
+							_1: {
+								ctor: '::',
+								_0: tool,
+								_1: {
+									ctor: '::',
+									_0: reason,
+									_1: {ctor: '[]'}
+								}
+							}
 						}
-					}
-				}
-			}));
+					})),
+			_1: {
+				ctor: '::',
+				_0: finished,
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _user$project$Main$ToolAndReason = F2(
 	function (a, b) {
@@ -8854,12 +10000,18 @@ var _user$project$Main$Model = F4(
 		return {toolAndReason: a, currentPage: b, project: c, part: d};
 	});
 var _user$project$Main$FaultSelector = {ctor: 'FaultSelector'};
+var _user$project$Main$ProjectSelector = {ctor: 'ProjectSelector'};
+var _user$project$Main$init = function () {
+	var model = {toolAndReason: _elm_lang$core$Maybe$Nothing, currentPage: _user$project$Main$ProjectSelector, project: _user$project$Projects$P32S, part: _elm_lang$core$Maybe$Nothing};
+	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+}();
+var _user$project$Main$BackToStart = {ctor: 'BackToStart'};
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'ReasonClick':
-				var info = {tool: _p4._0, reason: _p4._1};
+				var info = {tool: _p5._0, reason: _p5._1};
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -8874,27 +10026,27 @@ var _user$project$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{project: _p4._0}),
+						{project: _p5._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'BackToStart':
+				return _user$project$Main$init;
 			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
 						model,
 						{
-							part: _elm_lang$core$Maybe$Just(_p4._0),
+							part: _elm_lang$core$Maybe$Just(_p5._0),
 							currentPage: _user$project$Main$FaultSelector
 						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+					{
+						ctor: '::',
+						_0: A2(_user$project$Main$delay, _elm_lang$core$Time$second * 3, _user$project$Main$BackToStart),
+						_1: {ctor: '[]'}
+					});
 		}
 	});
-var _user$project$Main$ProjectSelector = {ctor: 'ProjectSelector'};
-var _user$project$Main$init = function () {
-	var model = {toolAndReason: _elm_lang$core$Maybe$Nothing, currentPage: _user$project$Main$ProjectSelector, project: _user$project$Projects$P32S, part: _elm_lang$core$Maybe$Nothing};
-	return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-}();
 var _user$project$Main$PartClick = function (a) {
 	return {ctor: 'PartClick', _0: a};
 };
@@ -8978,8 +10130,8 @@ var _user$project$Main$ReasonClick = F2(
 	});
 var _user$project$Main$view = function (model) {
 	var blah = function () {
-		var _p5 = model.currentPage;
-		if (_p5.ctor === 'ProjectSelector') {
+		var _p6 = model.currentPage;
+		if (_p6.ctor === 'ProjectSelector') {
 			return _user$project$Main$projectSelectorView(model);
 		} else {
 			return _user$project$FaultSelector$faultSelectorView(_user$project$Main$ReasonClick);
@@ -9002,7 +10154,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		view: _user$project$Main$view,
 		update: _user$project$Main$update,
-		subscriptions: function (_p6) {
+		subscriptions: function (_p7) {
 			return _elm_lang$core$Platform_Sub$none;
 		},
 		init: _user$project$Main$init
