@@ -29,7 +29,7 @@
     "http-server": "^0.11.1",
     "jquery": "2.2.4",
     "node-forge": "0.6.40",
-    "xml-crypto": "1.4.0",
+    "xml-crypto": "2.0.0",
     "xmldom": "0.1.22"
   },
   "main": "samling.js",
