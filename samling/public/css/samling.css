@@ -1,0 +1,100 @@
+/*
+ * Globals
+ */
+
+body {
+    font-family: Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #555;
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+    margin-top: 0;
+    font-weight: normal;
+    color: #333;
+}
+
+section {
+    margin-bottom: 32px;
+}
+
+section > ul,
+section > ol {
+    padding-left: 1em;
+}
+
+.samling-jumbotron {
+    background-color: #ffffff;
+}
+
+.form-check {
+    margin-bottom: 14px;
+}
+
+.form-check-label {
+    margin-left: 4px;
+}
+
+/*
+ * Masthead for nav
+ */
+
+.samling-navbar {
+    font-family: Avenir, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    background-color: #666666;
+}
+
+
+.samling-brand-logo {
+    height: 64px;
+    line-height: 64px;
+}
+
+.samling-brand {
+    font-size: 28px;
+    vertical-align: middle;
+}
+
+.samling-brand-subtitle {
+    font-size: small;
+}
+
+
+.samling-nav-item {
+    color: #666666;
+    font-size: 15px;
+}
+
+.samling-tab {
+    padding-top: 16px;
+}
+
+.samling-nav-pills > li.active > a,
+.samling-nav-pills > li.active > a:hover,
+.samling-nav-pills > li.active > a:focus {
+    color: #fff;
+    background-color: #666666;
+}
+
+.sidebar-module {
+    padding: 15px;
+    margin: 0 -15px 0;
+}
+.sidebar-module dd {
+    margin-bottom: 15px;
+}
+.sidebar-module-inset {
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+.sidebar-module-inset p:last-child,
+.sidebar-module-inset ul:last-child,
+.sidebar-module-inset ol:last-child {
+    margin-bottom: 0;
+}
