@@ -1,13 +1,10 @@
-<div align="center"><img src="https://capriza.github.io/images/logos/logos-scorpion.svg" height="128" /></div>
-
-Samling
-===
+# Samling
 
 Serverless (as in "client side only") SAML IDP for testing SAML integrations.
 
 ## See it Live
 
-Visit https://capriza.github.io/samling/samling.html to see it in action.
+Visit https://carlos-alberto.github.io/samling/samling.html to see it in action.
 
 ## What is SAMLING
 
@@ -47,33 +44,34 @@ cd samling
 docker build -t capriza/samling .
 docker run -d -p 8080:80 capriza/samling
 ```
+
 You can now access samling at http://localhost:8080
 
 ## How to Use
 
 ### SAMLRequest with AuthnRequest
 
-Use `https://capriza.github.io/samling/samling.html?SAMLRequest=<SAML_REQUEST>` to initiate a login request via samling.
+Use `https://carlos-alberto.github.io/samling/samling.html?SAMLRequest=<SAML_REQUEST>` to initiate a login request via samling.
 Specifying `ForceAuthn="true"` in the request will force Samling to land on the properties page instead of auto submitting the SAML response
 in case the user is already logged-in.
 
 ### SAMLRequest with LogoutRequest
 
-Use `https://capriza.github.io/samling/samling.html?SAMLRequest=<SAML_REQUEST>` to initiate a logout request.
+Use `https://carlos-alberto.github.io/samling/samling.html?SAMLRequest=<SAML_REQUEST>` to initiate a logout request.
 If there is an active user session, the SAML Response will be automatically posted back.
 
 Add `manual=1` query parameters to the url to logout manually instead of the response being automatically posted back.
 
 ### IdP Metadata
 
-Use `https://capriza.github.io/samling/public/metadata.xml` to obtain the _default_ IdP metadata of Samling. Note that the downloadable metadata contains the default public certificate of samling - it is not suitable for generated keys. If you generate a new key pair you can obtain the metadata with the correct certificate from the "IdP Metadata" view.
+Use `https://carlos-alberto.github.io/samling/public/metadata.xml` to obtain the _default_ IdP metadata of Samling. Note that the downloadable metadata contains the default public certificate of samling - it is not suitable for generated keys. If you generate a new key pair you can obtain the metadata with the correct certificate from the "IdP Metadata" view.
 
 ### Manual Usage
 
-1. Open up `https://capriza.github.io/samling/samling.html`. You'll land on the **SAML Response Properties** section.
-2. Fill in the required properties fields. Required fields are marked with an asterisks (*).
-   * `Name Identifier` - the user name
-   * `Assertion Consumer URL` - where to send the SAML response
+1. Open up `https://carlos-alberto.github.io/samling/samling.html`. You'll land on the **SAML Response Properties** section.
+2. Fill in the required properties fields. Required fields are marked with an asterisks (\*).
+   - `Name Identifier` - the user name
+   - `Assertion Consumer URL` - where to send the SAML response
 3. Click on **Create Response**. You will be be taken the **SAML Response** section.
 4. Review the SAML response and set the session duration, then click on **Post Response**. At this point a session cookie
    is created for the logged in user.
@@ -102,4 +100,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-

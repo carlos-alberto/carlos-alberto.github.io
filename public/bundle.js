@@ -38614,7 +38614,7 @@ exports.findFirst = findFirst
 },{"xpath":229}],223:[function(require,module,exports){
 function DOMParser(options){
 	this.options = options ||{locator:{}};
-	
+
 }
 DOMParser.prototype.parseFromString = function(source,mimeType){
 	var options = this.options;
@@ -38627,7 +38627,7 @@ DOMParser.prototype.parseFromString = function(source,mimeType){
 	if(locator){
 		domBuilder.setDocumentLocator(locator)
 	}
-	
+
 	sax.errorHandler = buildErrorHandler(errorHandler,domBuilder,locator);
 	sax.domBuilder = options.domBuilder || domBuilder;
 	if(/\/x?html?$/.test(mimeType)){
@@ -38672,8 +38672,8 @@ function buildErrorHandler(errorImpl,domBuilder,locator){
 /**
  * +ContentHandler+ErrorHandler
  * +LexicalHandler+EntityResolver2
- * -DeclHandler-DTDHandler 
- * 
+ * -DeclHandler-DTDHandler
+ *
  * DefaultHandler:EntityResolver, DTDHandler, ContentHandler, ErrorHandler
  * DefaultHandler2:DefaultHandler,LexicalHandler, DeclHandler, EntityResolver2
  * @link http://www.saxproject.org/apidoc/org/xml/sax/helpers/DefaultHandler.html
@@ -38688,13 +38688,13 @@ function position(locator,node){
 /**
  * @see org.xml.sax.ContentHandler#startDocument
  * @link http://www.saxproject.org/apidoc/org/xml/sax/ContentHandler.html
- */ 
+ */
 DOMHandler.prototype = {
 	startDocument : function() {
-    	this.doc = new DOMImplementation().createDocument(null, null, null);
-    	if (this.locator) {
-        	this.doc.documentURI = this.locator.systemId;
-    	}
+	this.doc = new DOMImplementation().createDocument(null, null, null);
+	if (this.locator) {
+		this.doc.documentURI = this.locator.systemId;
+	}
 	},
 	startElement:function(namespaceURI, localName, qName, attrs) {
 		var doc = this.doc;
@@ -38702,7 +38702,7 @@ DOMHandler.prototype = {
 	    var len = attrs.length;
 	    appendElement(this, el);
 	    this.currentElement = el;
-	    
+
 		this.locator && position(this.locator,el)
 	    for (var i = 0 ; i < len; i++) {
 	        var namespaceURI = attrs.getURI(i);
@@ -38755,7 +38755,7 @@ DOMHandler.prototype = {
 	},
 	setDocumentLocator:function (locator) {
 	    if(this.locator = locator){// && !('lineNumber' in locator)){
-	    	locator.lineNumber = 0;
+		locator.lineNumber = 0;
 	    }
 	},
 	//LexicalHandler
@@ -38765,7 +38765,7 @@ DOMHandler.prototype = {
 	    this.locator && position(this.locator,comm)
 	    appendElement(this, comm);
 	},
-	
+
 	startCDATA:function() {
 	    //used in characters() methods
 	    this.cdata = true;
@@ -38773,7 +38773,7 @@ DOMHandler.prototype = {
 	endCDATA:function() {
 	    this.cdata = false;
 	},
-	
+
 	startDTD:function(name, publicId, systemId) {
 		var impl = this.doc.implementation;
 	    if (impl && impl.createDocumentType) {
@@ -40123,7 +40123,7 @@ var tagNamePattern = new RegExp('^'+nameStartChar.source+nameChar.source+'*(?:\:
 //S_TAG,	S_ATTR,	S_EQ,	S_ATTR_NOQUOT_VALUE
 //S_ATTR_SPACE,	S_ATTR_END,	S_TAG_SPACE, S_TAG_CLOSE
 var S_TAG = 0;//tag name offerring
-var S_ATTR = 1;//attr name offerring 
+var S_ATTR = 1;//attr name offerring
 var S_ATTR_SPACE=2;//attr name end and space offer
 var S_EQ = 3;//=space?
 var S_ATTR_NOQUOT_VALUE = 4;//attr value(no quot value only)
@@ -40132,7 +40132,7 @@ var S_TAG_SPACE = 6;//(attr value end || tag end ) && (space offer)
 var S_TAG_CLOSE = 7;//closed el<el />
 
 function XMLReader(){
-	
+
 }
 
 XMLReader.prototype = {
@@ -40162,7 +40162,7 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 	function entityReplacer(a){
 		var k = a.slice(1,-1);
 		if(k in entityMap){
-			return entityMap[k]; 
+			return entityMap[k];
 		}else if(k.charAt(0) === '#'){
 			return fixedFromCharCode(parseInt(k.substr(1).replace('x','0x')))
 		}else{
@@ -40191,7 +40191,7 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 	var lineEnd = 0;
 	var linePattern = /.*(?:\r\n?|\n)|.*$/g
 	var locator = domBuilder.locator;
-	
+
 	var parseStack = [{currentNSMap:defaultNSMapCopy}]
 	var closeMap = {};
 	var start = 0;
@@ -40201,9 +40201,9 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 			if(tagStart<0){
 				if(!source.substr(start).match(/^\s*$/)){
 					var doc = domBuilder.doc;
-	    			var text = doc.createTextNode(source.substr(start));
-	    			doc.appendChild(text);
-	    			domBuilder.currentElement = text;
+				var text = doc.createTextNode(source.substr(start));
+				doc.appendChild(text);
+				domBuilder.currentElement = text;
 				}
 				return;
 			}
@@ -40216,15 +40216,15 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 				var tagName = source.substring(tagStart+2,end);
 				var config = parseStack.pop();
 				if(end<0){
-					
-	        		tagName = source.substring(tagStart+2).replace(/[\s<].*/,'');
-	        		//console.error('#@@@@@@'+tagName)
-	        		errorHandler.error("end tag name: "+tagName+' is not complete:'+config.tagName);
-	        		end = tagStart+1+tagName.length;
-	        	}else if(tagName.match(/\s</)){
-	        		tagName = tagName.replace(/[\s<].*/,'');
-	        		errorHandler.error("end tag name: "+tagName+' maybe not complete');
-	        		end = tagStart+1+tagName.length;
+
+				tagName = source.substring(tagStart+2).replace(/[\s<].*/,'');
+				//console.error('#@@@@@@'+tagName)
+				errorHandler.error("end tag name: "+tagName+' is not complete:'+config.tagName);
+				end = tagStart+1+tagName.length;
+			}else if(tagName.match(/\s</)){
+				tagName = tagName.replace(/[\s<].*/,'');
+				errorHandler.error("end tag name: "+tagName+' maybe not complete');
+				end = tagStart+1+tagName.length;
 				}
 				//console.error(parseStack.length,parseStack)
 				//console.error(config);
@@ -40232,19 +40232,19 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 				var endMatch = config.tagName == tagName;
 				var endIgnoreCaseMach = endMatch || config.tagName&&config.tagName.toLowerCase() == tagName.toLowerCase()
 		        if(endIgnoreCaseMach){
-		        	domBuilder.endElement(config.uri,config.localName,tagName);
+				domBuilder.endElement(config.uri,config.localName,tagName);
 					if(localNSMap){
 						for(var prefix in localNSMap){
 							domBuilder.endPrefixMapping(prefix) ;
 						}
 					}
 					if(!endMatch){
-		            	errorHandler.fatalError("end tag name: "+tagName+' is not match the current start tagName:'+config.tagName );
+				errorHandler.fatalError("end tag name: "+tagName+' is not match the current start tagName:'+config.tagName );
 					}
 		        }else{
-		        	parseStack.push(config)
+				parseStack.push(config)
 		        }
-				
+
 				end++;
 				break;
 				// end elment
@@ -40263,8 +40263,8 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 				//elStartEnd
 				var end = parseElementStartPart(source,tagStart,el,currentNSMap,entityReplacer,errorHandler);
 				var len = el.length;
-				
-				
+
+
 				if(!el.closed && fixSelfClosed(source,end,el.tagName,closeMap)){
 					el.closed = true;
 					if(!entityMap.nbsp){
@@ -40290,9 +40290,9 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 						parseStack.push(el)
 					}
 				}
-				
-				
-				
+
+
+
 				if(el.uri === 'http://www.w3.org/1999/xhtml' && !el.closed){
 					end = parseHtmlSpecialContent(source,end,el.tagName,entityReplacer,domBuilder)
 				}else{
@@ -40519,7 +40519,7 @@ function appendElement(el,domBuilder,currentNSMap){
 		}
 		//can not set prefix,because prefix !== ''
 		a.localName = localName ;
-		//prefix == null for no ns prefix attribute 
+		//prefix == null for no ns prefix attribute
 		if(nsPrefix !== false){//hack!!
 			if(localNSMap == null){
 				localNSMap = {}
@@ -40529,7 +40529,7 @@ function appendElement(el,domBuilder,currentNSMap){
 			}
 			currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value;
 			a.uri = 'http://www.w3.org/2000/xmlns/'
-			domBuilder.startPrefixMapping(nsPrefix, value) 
+			domBuilder.startPrefixMapping(nsPrefix, value)
 		}
 	}
 	var i = el.length;
@@ -40541,7 +40541,7 @@ function appendElement(el,domBuilder,currentNSMap){
 				a.uri = 'http://www.w3.org/XML/1998/namespace';
 			}if(prefix !== 'xmlns'){
 				a.uri = currentNSMap[prefix || '']
-				
+
 				//{console.log('###'+a.qName,domBuilder.locator.systemId+'',currentNSMap,a.uri)}
 			}
 		}
@@ -40563,7 +40563,7 @@ function appendElement(el,domBuilder,currentNSMap){
 		domBuilder.endElement(ns,localName,tagName);
 		if(localNSMap){
 			for(prefix in localNSMap){
-				domBuilder.endPrefixMapping(prefix) 
+				domBuilder.endPrefixMapping(prefix)
 			}
 		}
 	}else{
@@ -40590,7 +40590,7 @@ function parseHtmlSpecialContent(source,elStartEnd,tagName,entityReplacer,domBui
 				domBuilder.characters(text,0,text.length);
 				return elEndStart;
 			//}
-			
+
 		}
 	}
 	return elStartEnd+1;
@@ -40607,7 +40607,7 @@ function fixSelfClosed(source,elStartEnd,tagName,closeMap){
 		closeMap[tagName] =pos
 	}
 	return pos<elStartEnd;
-	//} 
+	//}
 }
 function _copy(source,target){
 	for(var n in source){target[n] = source[n]}
@@ -40635,11 +40635,11 @@ function parseDCC(source,start,domBuilder,errorHandler){//sure start with '<!'
 			var end = source.indexOf(']]>',start+9);
 			domBuilder.startCDATA();
 			domBuilder.characters(source,start+9,end-start-9);
-			domBuilder.endCDATA() 
+			domBuilder.endCDATA()
 			return end+3;
 		}
 		//<!DOCTYPE
-		//startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId) 
+		//startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)
 		var matchs = split(source,start);
 		var len = matchs.length;
 		if(len>1 && /!doctype/i.test(matchs[0][0])){
@@ -40650,7 +40650,7 @@ function parseDCC(source,start,domBuilder,errorHandler){//sure start with '<!'
 			domBuilder.startDTD(name,pubid && pubid.replace(/^(['"])(.*?)\1$/,'$2'),
 					sysid && sysid.replace(/^(['"])(.*?)\1$/,'$2'));
 			domBuilder.endDTD();
-			
+
 			return lastMatch.index+lastMatch[0].length
 		}
 	}
@@ -40678,7 +40678,7 @@ function parseInstruction(source,start,domBuilder){
  * @param source
  */
 function ElementAttributes(source){
-	
+
 }
 ElementAttributes.prototype = {
 	setTagName:function(tagName){
@@ -40701,7 +40701,7 @@ ElementAttributes.prototype = {
 	getValue:function(i){return this[i].value}
 //	,getIndex:function(uri, localName)){
 //		if(localName){
-//			
+//
 //		}else{
 //			var qName = uri
 //		}
@@ -40748,9 +40748,9 @@ exports.XMLReader = XMLReader;
 },{}],226:[function(require,module,exports){
 function DOMParser(options){
 	this.options = options ||{locator:{}};
-	
+
 }
-DOMParser.prototype.parseFromString = function(source,mimeType){	
+DOMParser.prototype.parseFromString = function(source,mimeType){
 	var options = this.options;
 	var sax =  new XMLReader();
 	var domBuilder = options.domBuilder || new DOMHandler();//contentHandler and LexicalHandler
@@ -40761,7 +40761,7 @@ DOMParser.prototype.parseFromString = function(source,mimeType){
 	if(locator){
 		domBuilder.setDocumentLocator(locator)
 	}
-	
+
 	sax.errorHandler = buildErrorHandler(errorHandler,domBuilder,locator);
 	sax.domBuilder = options.domBuilder || domBuilder;
 	if(/\/x?html?$/.test(mimeType)){
@@ -40806,8 +40806,8 @@ function buildErrorHandler(errorImpl,domBuilder,locator){
 /**
  * +ContentHandler+ErrorHandler
  * +LexicalHandler+EntityResolver2
- * -DeclHandler-DTDHandler 
- * 
+ * -DeclHandler-DTDHandler
+ *
  * DefaultHandler:EntityResolver, DTDHandler, ContentHandler, ErrorHandler
  * DefaultHandler2:DefaultHandler,LexicalHandler, DeclHandler, EntityResolver2
  * @link http://www.saxproject.org/apidoc/org/xml/sax/helpers/DefaultHandler.html
@@ -40822,13 +40822,13 @@ function position(locator,node){
 /**
  * @see org.xml.sax.ContentHandler#startDocument
  * @link http://www.saxproject.org/apidoc/org/xml/sax/ContentHandler.html
- */ 
+ */
 DOMHandler.prototype = {
 	startDocument : function() {
-    	this.document = new DOMImplementation().createDocument(null, null, null);
-    	if (this.locator) {
-        	this.document.documentURI = this.locator.systemId;
-    	}
+	this.document = new DOMImplementation().createDocument(null, null, null);
+	if (this.locator) {
+		this.document.documentURI = this.locator.systemId;
+	}
 	},
 	startElement:function(namespaceURI, localName, qName, attrs) {
 		var doc = this.document;
@@ -40836,7 +40836,7 @@ DOMHandler.prototype = {
 	    var len = attrs.length;
 	    appendElement(this, el);
 	    this.currentElement = el;
-	    
+
 		this.locator && position(this.locator,el)
 	    for (var i = 0 ; i < len; i++) {
 	        var namespaceURI = attrs.getURI(i);
@@ -40887,7 +40887,7 @@ DOMHandler.prototype = {
 	},
 	setDocumentLocator:function (locator) {
 	    if(this.locator = locator){// && !('lineNumber' in locator)){
-	    	locator.lineNumber = 0;
+		locator.lineNumber = 0;
 	    }
 	},
 	//LexicalHandler
@@ -40897,7 +40897,7 @@ DOMHandler.prototype = {
 	    this.locator && position(this.locator,comm)
 	    appendElement(this, comm);
 	},
-	
+
 	startCDATA:function() {
 	    //used in characters() methods
 	    this.cdata = true;
@@ -40905,7 +40905,7 @@ DOMHandler.prototype = {
 	endCDATA:function() {
 	    this.cdata = false;
 	},
-	
+
 	startDTD:function(name, publicId, systemId) {
 		var impl = this.document.implementation;
 	    if (impl && impl.createDocumentType) {
@@ -41097,14 +41097,14 @@ NodeList.prototype = {
 	 * The number of nodes in the list. The range of valid child node indices is 0 to length-1 inclusive.
 	 * @standard level1
 	 */
-	length:0, 
+	length:0,
 	/**
 	 * Returns the indexth item in the collection. If index is greater than or equal to the number of nodes in the list, this returns null.
 	 * @standard level1
-	 * @param index  unsigned long 
+	 * @param index  unsigned long
 	 *   Index into the collection.
 	 * @return Node
-	 * 	The node at the indexth position in the NodeList, or null if that is not a valid index. 
+	 * 	The node at the indexth position in the NodeList, or null if that is not a valid index.
 	 */
 	item: function(index) {
 		return this[index] || null;
@@ -42158,7 +42158,7 @@ var tagNamePattern = new RegExp('^'+nameStartChar.source+nameChar.source+'*(?:\:
 //S_TAG,	S_ATTR,	S_EQ,	S_V
 //S_ATTR_S,	S_E,	S_S,	S_C
 var S_TAG = 0;//tag name offerring
-var S_ATTR = 1;//attr name offerring 
+var S_ATTR = 1;//attr name offerring
 var S_ATTR_S=2;//attr name end and space offer
 var S_EQ = 3;//=space?
 var S_V = 4;//attr value(no quot value only)
@@ -42167,7 +42167,7 @@ var S_S = 6;//(attr value end || tag end ) && (space offer)
 var S_C = 7;//closed el<el />
 
 function XMLReader(){
-	
+
 }
 
 XMLReader.prototype = {
@@ -42197,7 +42197,7 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 	function entityReplacer(a){
 		var k = a.slice(1,-1);
 		if(k in entityMap){
-			return entityMap[k]; 
+			return entityMap[k];
 		}else if(k.charAt(0) === '#'){
 			return fixedFromCharCode(parseInt(k.substr(1).replace('x','0x')))
 		}else{
@@ -42226,7 +42226,7 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 	var lineEnd = 0;
 	var linePattern = /.+(?:\r\n?|\n)|.*$/g
 	var locator = domBuilder.locator;
-	
+
 	var parseStack = [{currentNSMap:defaultNSMapCopy}]
 	var closeMap = {};
 	var start = 0;
@@ -42236,9 +42236,9 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 			if(tagStart<0){
 				if(!source.substr(start).match(/^\s*$/)){
 					var doc = domBuilder.document;
-	    			var text = doc.createTextNode(source.substr(start));
-	    			doc.appendChild(text);
-	    			domBuilder.currentElement = text;
+				var text = doc.createTextNode(source.substr(start));
+				doc.appendChild(text);
+				domBuilder.currentElement = text;
 				}
 				return;
 			}
@@ -42272,15 +42272,15 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 				end = parseDCC(source,tagStart,domBuilder,errorHandler);
 				break;
 			default:
-			
+
 				locator&&position(tagStart);
-				
+
 				var el = new ElementAttributes();
-				
+
 				//elStartEnd
 				var end = parseElementStartPart(source,tagStart,el,entityReplacer,errorHandler);
 				var len = el.length;
-				
+
 				if(locator){
 					if(len){
 						//attribute position fixed
@@ -42299,8 +42299,8 @@ function parse(source,defaultNSMapCopy,entityMap,domBuilder,errorHandler){
 					}
 				}
 				appendElement(el,domBuilder,parseStack);
-				
-				
+
+
 				if(el.uri === 'http://www.w3.org/1999/xhtml' && !el.closed){
 					end = parseHtmlSpecialContent(source,end,el.tagName,entityReplacer,domBuilder)
 				}else{
@@ -42510,7 +42510,7 @@ function appendElement(el,domBuilder,parseStack){
 		}
 		//can not set prefix,because prefix !== ''
 		a.localName = localName ;
-		//prefix == null for no ns prefix attribute 
+		//prefix == null for no ns prefix attribute
 		if(nsPrefix !== false){//hack!!
 			if(localNSMap == null){
 				localNSMap = {}
@@ -42520,7 +42520,7 @@ function appendElement(el,domBuilder,parseStack){
 			}
 			currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value;
 			a.uri = 'http://www.w3.org/2000/xmlns/'
-			domBuilder.startPrefixMapping(nsPrefix, value) 
+			domBuilder.startPrefixMapping(nsPrefix, value)
 		}
 	}
 	var i = el.length;
@@ -42532,7 +42532,7 @@ function appendElement(el,domBuilder,parseStack){
 				a.uri = 'http://www.w3.org/XML/1998/namespace';
 			}if(prefix !== 'xmlns'){
 				a.uri = currentNSMap[prefix]
-				
+
 				//{console.log('###'+a.qName,domBuilder.locator.systemId+'',currentNSMap,a.uri)}
 			}
 		}
@@ -42554,7 +42554,7 @@ function appendElement(el,domBuilder,parseStack){
 		domBuilder.endElement(ns,localName,tagName);
 		if(localNSMap){
 			for(prefix in localNSMap){
-				domBuilder.endPrefixMapping(prefix) 
+				domBuilder.endPrefixMapping(prefix)
 			}
 		}
 	}else{
@@ -42580,7 +42580,7 @@ function parseHtmlSpecialContent(source,elStartEnd,tagName,entityReplacer,domBui
 				domBuilder.characters(text,0,text.length);
 				return elEndStart;
 			//}
-			
+
 		}
 	}
 	return elStartEnd+1;
@@ -42593,7 +42593,7 @@ function fixSelfClosed(source,elStartEnd,tagName,closeMap){
 		pos = closeMap[tagName] = source.lastIndexOf('</'+tagName+'>')
 	}
 	return pos<elStartEnd;
-	//} 
+	//}
 }
 function _copy(source,target){
 	for(var n in source){target[n] = source[n]}
@@ -42621,11 +42621,11 @@ function parseDCC(source,start,domBuilder,errorHandler){//sure start with '<!'
 			var end = source.indexOf(']]>',start+9);
 			domBuilder.startCDATA();
 			domBuilder.characters(source,start+9,end-start-9);
-			domBuilder.endCDATA() 
+			domBuilder.endCDATA()
 			return end+3;
 		}
 		//<!DOCTYPE
-		//startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId) 
+		//startDTD(java.lang.String name, java.lang.String publicId, java.lang.String systemId)
 		var matchs = split(source,start);
 		var len = matchs.length;
 		if(len>1 && /!doctype/i.test(matchs[0][0])){
@@ -42636,7 +42636,7 @@ function parseDCC(source,start,domBuilder,errorHandler){//sure start with '<!'
 			domBuilder.startDTD(name,pubid && pubid.replace(/^(['"])(.*?)\1$/,'$2'),
 					sysid && sysid.replace(/^(['"])(.*?)\1$/,'$2'));
 			domBuilder.endDTD();
-			
+
 			return lastMatch.index+lastMatch[0].length
 		}
 	}
@@ -42664,7 +42664,7 @@ function parseInstruction(source,start,domBuilder){
  * @param source
  */
 function ElementAttributes(source){
-	
+
 }
 ElementAttributes.prototype = {
 	setTagName:function(tagName){
@@ -42687,7 +42687,7 @@ ElementAttributes.prototype = {
 	getValue:function(i){return this[i].value}
 //	,getIndex:function(uri, localName)){
 //		if(localName){
-//			
+//
 //		}else{
 //			var qName = uri
 //		}
@@ -42869,9 +42869,9 @@ var reduce = curry(function (f, seed, xs) {
 	return acc;
 });
 
-var map = curry(function (f, xs) { 
+var map = curry(function (f, xs) {
 	var mapped = new Array(xs.length);
-	
+
 	forEach(function (x, i) { mapped[i] = f(x); }, xs);
 
 	return mapped;
@@ -42879,9 +42879,9 @@ var map = curry(function (f, xs) {
 
 var filter = curry(function (f, xs) {
 	var filtered = [];
-	
+
 	forEach(function (x, i) { if(f(x, i)) { filtered.push(x); } }, xs);
-	
+
 	return filtered;
 });
 
@@ -42889,7 +42889,7 @@ function compose() {
     if (arguments.length === 0) { throw new Error('compose requires at least one argument'); }
 
     var funcs = Array.prototype.slice.call(arguments).reverse();
-	
+
     var f0 = funcs[0];
     var fRem = funcs.slice(1);
 
@@ -42906,7 +42906,7 @@ var includes = curry(function (values, value) {
 			return true;
 		}
 	}
-	
+
 	return false;
 });
 
@@ -44047,7 +44047,7 @@ XPath.prototype.evaluate = function(c) {
 		setIfUnset(c, 'caseInsensitive', true);
 		setIfUnset(c, 'allowAnyNamespaceForNoPrefix', true);
 	}
-	
+
     setIfUnset(c, 'caseInsensitive', false);
 
 	return this.expression.evaluate(c);
@@ -44510,7 +44510,7 @@ function findRoot(node) {
 PathExpr.applyPredicates = function (predicates, c, nodes) {
 	return reduce(function (inNodes, pred) {
 		var ctx = c.extend({ contextSize: inNodes.length });
-		
+
 		return filter(function (node, i) {
 			return PathExpr.predicateMatches(pred, ctx.extend({ contextNode: node, contextPosition: i + 1 }));
 		}, inNodes);
@@ -44519,25 +44519,25 @@ PathExpr.applyPredicates = function (predicates, c, nodes) {
 
 PathExpr.getRoot = function (xpc, nodes) {
 	var firstNode = nodes[0];
-	
+
     if (firstNode.nodeType === 9 /*Node.DOCUMENT_NODE*/) {
 		return firstNode;
 	}
-	
+
     if (xpc.virtualRoot) {
-    	return xpc.virtualRoot;
+	return xpc.virtualRoot;
     }
-		
+
 	var ownerDoc = firstNode.ownerDocument;
-	
+
 	if (ownerDoc) {
 		return ownerDoc;
 	}
-			
+
     // IE 5.5 doesn't have ownerDocument?
     var n = firstNode;
     while (n.parentNode != null) {
-    	n = n.parentNode;
+	n = n.parentNode;
     }
     return n;
 }
@@ -44546,233 +44546,233 @@ PathExpr.applyStep = function (step, xpc, node) {
 	var self = this;
 	var newNodes = [];
     xpc.contextNode = node;
-    
+
     switch (step.axis) {
-    	case Step.ANCESTOR:
-    		// look at all the ancestor nodes
-    		if (xpc.contextNode === xpc.virtualRoot) {
-    			break;
-    		}
-    		var m;
-    		if (xpc.contextNode.nodeType == 2 /*Node.ATTRIBUTE_NODE*/) {
-    			m = PathExpr.getOwnerElement(xpc.contextNode);
-    		} else {
-    			m = xpc.contextNode.parentNode;
-    		}
-    		while (m != null) {
-    			if (step.nodeTest.matches(m, xpc)) {
-    				newNodes.push(m);
-    			}
-    			if (m === xpc.virtualRoot) {
-    				break;
-    			}
-    			m = m.parentNode;
-    		}
-    		break;
-    
-    	case Step.ANCESTORORSELF:
-    		// look at all the ancestor nodes and the current node
-    		for (var m = xpc.contextNode; m != null; m = m.nodeType == 2 /*Node.ATTRIBUTE_NODE*/ ? PathExpr.getOwnerElement(m) : m.parentNode) {
-    			if (step.nodeTest.matches(m, xpc)) {
-    				newNodes.push(m);
-    			}
-    			if (m === xpc.virtualRoot) {
-    				break;
-    			}
-    		}
-    		break;
-    
-    	case Step.ATTRIBUTE:
-    		// look at the attributes
-    		var nnm = xpc.contextNode.attributes;
-    		if (nnm != null) {
-    			for (var k = 0; k < nnm.length; k++) {
-    				var m = nnm.item(k);
-    				if (step.nodeTest.matches(m, xpc)) {
-    					newNodes.push(m);
-    				}
-    			}
-    		}
-    		break;
-    
-    	case Step.CHILD:
-    		// look at all child elements
-    		for (var m = xpc.contextNode.firstChild; m != null; m = m.nextSibling) {
-    			if (step.nodeTest.matches(m, xpc)) {
-    				newNodes.push(m);
-    			}
-    		}
-    		break;
-    
-    	case Step.DESCENDANT:
-    		// look at all descendant nodes
-    		var st = [ xpc.contextNode.firstChild ];
-    		while (st.length > 0) {
-    			for (var m = st.pop(); m != null; ) {
-    				if (step.nodeTest.matches(m, xpc)) {
-    					newNodes.push(m);
-    				}
-    				if (m.firstChild != null) {
-    					st.push(m.nextSibling);
-    					m = m.firstChild;
-    				} else {
-    					m = m.nextSibling;
-    				}
-    			}
-    		}
-    		break;
-    
-    	case Step.DESCENDANTORSELF:
-    		// look at self
-    		if (step.nodeTest.matches(xpc.contextNode, xpc)) {
-    			newNodes.push(xpc.contextNode);
-    		}
-    		// look at all descendant nodes
-    		var st = [ xpc.contextNode.firstChild ];
-    		while (st.length > 0) {
-    			for (var m = st.pop(); m != null; ) {
-    				if (step.nodeTest.matches(m, xpc)) {
-    					newNodes.push(m);
-    				}
-    				if (m.firstChild != null) {
-    					st.push(m.nextSibling);
-    					m = m.firstChild;
-    				} else {
-    					m = m.nextSibling;
-    				}
-    			}
-    		}
-    		break;
-    
-    	case Step.FOLLOWING:
-    		if (xpc.contextNode === xpc.virtualRoot) {
-    			break;
-    		}
-    		var st = [];
-    		if (xpc.contextNode.firstChild != null) {
-    			st.unshift(xpc.contextNode.firstChild);
-    		} else {
-    			st.unshift(xpc.contextNode.nextSibling);
-    		}
-    		for (var m = xpc.contextNode.parentNode; m != null && m.nodeType != 9 /*Node.DOCUMENT_NODE*/ && m !== xpc.virtualRoot; m = m.parentNode) {
-    			st.unshift(m.nextSibling);
-    		}
-    		do {
-    			for (var m = st.pop(); m != null; ) {
-    				if (step.nodeTest.matches(m, xpc)) {
-    					newNodes.push(m);
-    				}
-    				if (m.firstChild != null) {
-    					st.push(m.nextSibling);
-    					m = m.firstChild;
-    				} else {
-    					m = m.nextSibling;
-    				}
-    			}
-    		} while (st.length > 0);
-    		break;
-    
-    	case Step.FOLLOWINGSIBLING:
-    		if (xpc.contextNode === xpc.virtualRoot) {
-    			break;
-    		}
-    		for (var m = xpc.contextNode.nextSibling; m != null; m = m.nextSibling) {
-    			if (step.nodeTest.matches(m, xpc)) {
-    				newNodes.push(m);
-    			}
-    		}
-    		break;
-    
-    	case Step.NAMESPACE:
-    		var n = {};
-    		if (xpc.contextNode.nodeType == 1 /*Node.ELEMENT_NODE*/) {
-    			n["xml"] = XPath.XML_NAMESPACE_URI;
-    			n["xmlns"] = XPath.XMLNS_NAMESPACE_URI;
-    			for (var m = xpc.contextNode; m != null && m.nodeType == 1 /*Node.ELEMENT_NODE*/; m = m.parentNode) {
-    				for (var k = 0; k < m.attributes.length; k++) {
-    					var attr = m.attributes.item(k);
-    					var nm = String(attr.name);
-    					if (nm == "xmlns") {
-    						if (n[""] == undefined) {
-    							n[""] = attr.value;
-    						}
-    					} else if (nm.length > 6 && nm.substring(0, 6) == "xmlns:") {
-    						var pre = nm.substring(6, nm.length);
-    						if (n[pre] == undefined) {
-    							n[pre] = attr.value;
-    						}
-    					}
-    				}
-    			}
-    			for (var pre in n) {
-    				var nsn = new XPathNamespace(pre, n[pre], xpc.contextNode);
-    				if (step.nodeTest.matches(nsn, xpc)) {
-    					newNodes.push(nsn);
-    				}
-    			}
-    		}
-    		break;
-    
-    	case Step.PARENT:
-    		m = null;
-    		if (xpc.contextNode !== xpc.virtualRoot) {
-    			if (xpc.contextNode.nodeType == 2 /*Node.ATTRIBUTE_NODE*/) {
-    				m = PathExpr.getOwnerElement(xpc.contextNode);
-    			} else {
-    				m = xpc.contextNode.parentNode;
-    			}
-    		}
-    		if (m != null && step.nodeTest.matches(m, xpc)) {
-    			newNodes.push(m);
-    		}
-    		break;
-    
-    	case Step.PRECEDING:
-    		var st;
-    		if (xpc.virtualRoot != null) {
-    			st = [ xpc.virtualRoot ];
-    		} else {
+	case Step.ANCESTOR:
+		// look at all the ancestor nodes
+		if (xpc.contextNode === xpc.virtualRoot) {
+			break;
+		}
+		var m;
+		if (xpc.contextNode.nodeType == 2 /*Node.ATTRIBUTE_NODE*/) {
+			m = PathExpr.getOwnerElement(xpc.contextNode);
+		} else {
+			m = xpc.contextNode.parentNode;
+		}
+		while (m != null) {
+			if (step.nodeTest.matches(m, xpc)) {
+				newNodes.push(m);
+			}
+			if (m === xpc.virtualRoot) {
+				break;
+			}
+			m = m.parentNode;
+		}
+		break;
+
+	case Step.ANCESTORORSELF:
+		// look at all the ancestor nodes and the current node
+		for (var m = xpc.contextNode; m != null; m = m.nodeType == 2 /*Node.ATTRIBUTE_NODE*/ ? PathExpr.getOwnerElement(m) : m.parentNode) {
+			if (step.nodeTest.matches(m, xpc)) {
+				newNodes.push(m);
+			}
+			if (m === xpc.virtualRoot) {
+				break;
+			}
+		}
+		break;
+
+	case Step.ATTRIBUTE:
+		// look at the attributes
+		var nnm = xpc.contextNode.attributes;
+		if (nnm != null) {
+			for (var k = 0; k < nnm.length; k++) {
+				var m = nnm.item(k);
+				if (step.nodeTest.matches(m, xpc)) {
+					newNodes.push(m);
+				}
+			}
+		}
+		break;
+
+	case Step.CHILD:
+		// look at all child elements
+		for (var m = xpc.contextNode.firstChild; m != null; m = m.nextSibling) {
+			if (step.nodeTest.matches(m, xpc)) {
+				newNodes.push(m);
+			}
+		}
+		break;
+
+	case Step.DESCENDANT:
+		// look at all descendant nodes
+		var st = [ xpc.contextNode.firstChild ];
+		while (st.length > 0) {
+			for (var m = st.pop(); m != null; ) {
+				if (step.nodeTest.matches(m, xpc)) {
+					newNodes.push(m);
+				}
+				if (m.firstChild != null) {
+					st.push(m.nextSibling);
+					m = m.firstChild;
+				} else {
+					m = m.nextSibling;
+				}
+			}
+		}
+		break;
+
+	case Step.DESCENDANTORSELF:
+		// look at self
+		if (step.nodeTest.matches(xpc.contextNode, xpc)) {
+			newNodes.push(xpc.contextNode);
+		}
+		// look at all descendant nodes
+		var st = [ xpc.contextNode.firstChild ];
+		while (st.length > 0) {
+			for (var m = st.pop(); m != null; ) {
+				if (step.nodeTest.matches(m, xpc)) {
+					newNodes.push(m);
+				}
+				if (m.firstChild != null) {
+					st.push(m.nextSibling);
+					m = m.firstChild;
+				} else {
+					m = m.nextSibling;
+				}
+			}
+		}
+		break;
+
+	case Step.FOLLOWING:
+		if (xpc.contextNode === xpc.virtualRoot) {
+			break;
+		}
+		var st = [];
+		if (xpc.contextNode.firstChild != null) {
+			st.unshift(xpc.contextNode.firstChild);
+		} else {
+			st.unshift(xpc.contextNode.nextSibling);
+		}
+		for (var m = xpc.contextNode.parentNode; m != null && m.nodeType != 9 /*Node.DOCUMENT_NODE*/ && m !== xpc.virtualRoot; m = m.parentNode) {
+			st.unshift(m.nextSibling);
+		}
+		do {
+			for (var m = st.pop(); m != null; ) {
+				if (step.nodeTest.matches(m, xpc)) {
+					newNodes.push(m);
+				}
+				if (m.firstChild != null) {
+					st.push(m.nextSibling);
+					m = m.firstChild;
+				} else {
+					m = m.nextSibling;
+				}
+			}
+		} while (st.length > 0);
+		break;
+
+	case Step.FOLLOWINGSIBLING:
+		if (xpc.contextNode === xpc.virtualRoot) {
+			break;
+		}
+		for (var m = xpc.contextNode.nextSibling; m != null; m = m.nextSibling) {
+			if (step.nodeTest.matches(m, xpc)) {
+				newNodes.push(m);
+			}
+		}
+		break;
+
+	case Step.NAMESPACE:
+		var n = {};
+		if (xpc.contextNode.nodeType == 1 /*Node.ELEMENT_NODE*/) {
+			n["xml"] = XPath.XML_NAMESPACE_URI;
+			n["xmlns"] = XPath.XMLNS_NAMESPACE_URI;
+			for (var m = xpc.contextNode; m != null && m.nodeType == 1 /*Node.ELEMENT_NODE*/; m = m.parentNode) {
+				for (var k = 0; k < m.attributes.length; k++) {
+					var attr = m.attributes.item(k);
+					var nm = String(attr.name);
+					if (nm == "xmlns") {
+						if (n[""] == undefined) {
+							n[""] = attr.value;
+						}
+					} else if (nm.length > 6 && nm.substring(0, 6) == "xmlns:") {
+						var pre = nm.substring(6, nm.length);
+						if (n[pre] == undefined) {
+							n[pre] = attr.value;
+						}
+					}
+				}
+			}
+			for (var pre in n) {
+				var nsn = new XPathNamespace(pre, n[pre], xpc.contextNode);
+				if (step.nodeTest.matches(nsn, xpc)) {
+					newNodes.push(nsn);
+				}
+			}
+		}
+		break;
+
+	case Step.PARENT:
+		m = null;
+		if (xpc.contextNode !== xpc.virtualRoot) {
+			if (xpc.contextNode.nodeType == 2 /*Node.ATTRIBUTE_NODE*/) {
+				m = PathExpr.getOwnerElement(xpc.contextNode);
+			} else {
+				m = xpc.contextNode.parentNode;
+			}
+		}
+		if (m != null && step.nodeTest.matches(m, xpc)) {
+			newNodes.push(m);
+		}
+		break;
+
+	case Step.PRECEDING:
+		var st;
+		if (xpc.virtualRoot != null) {
+			st = [ xpc.virtualRoot ];
+		} else {
                 // cannot rely on .ownerDocument because the node may be in a document fragment
                 st = [findRoot(xpc.contextNode)];
-    		}
-    		outer: while (st.length > 0) {
-    			for (var m = st.pop(); m != null; ) {
-    				if (m == xpc.contextNode) {
-    					break outer;
-    				}
-    				if (step.nodeTest.matches(m, xpc)) {
-    					newNodes.unshift(m);
-    				}
-    				if (m.firstChild != null) {
-    					st.push(m.nextSibling);
-    					m = m.firstChild;
-    				} else {
-    					m = m.nextSibling;
-    				}
-    			}
-    		}
-    		break;
-    
-    	case Step.PRECEDINGSIBLING:
-    		if (xpc.contextNode === xpc.virtualRoot) {
-    			break;
-    		}
-    		for (var m = xpc.contextNode.previousSibling; m != null; m = m.previousSibling) {
-    			if (step.nodeTest.matches(m, xpc)) {
-    				newNodes.push(m);
-    			}
-    		}
-    		break;
-    
-    	case Step.SELF:
-    		if (step.nodeTest.matches(xpc.contextNode, xpc)) {
-    			newNodes.push(xpc.contextNode);
-    		}
-    		break;
-    
-    	default:
+		}
+		outer: while (st.length > 0) {
+			for (var m = st.pop(); m != null; ) {
+				if (m == xpc.contextNode) {
+					break outer;
+				}
+				if (step.nodeTest.matches(m, xpc)) {
+					newNodes.unshift(m);
+				}
+				if (m.firstChild != null) {
+					st.push(m.nextSibling);
+					m = m.firstChild;
+				} else {
+					m = m.nextSibling;
+				}
+			}
+		}
+		break;
+
+	case Step.PRECEDINGSIBLING:
+		if (xpc.contextNode === xpc.virtualRoot) {
+			break;
+		}
+		for (var m = xpc.contextNode.previousSibling; m != null; m = m.previousSibling) {
+			if (step.nodeTest.matches(m, xpc)) {
+				newNodes.push(m);
+			}
+		}
+		break;
+
+	case Step.SELF:
+		if (step.nodeTest.matches(xpc.contextNode, xpc)) {
+			newNodes.push(xpc.contextNode);
+		}
+		break;
+
+	default:
     }
-	
+
 	return newNodes;
 };
 
@@ -44788,7 +44788,7 @@ PathExpr.prototype.applyFilter = function(c, xpc) {
 	if (!this.filter) {
 		return { nodes: [ c.contextNode ] };
 	}
-	
+
 	var ns = this.filter.evaluate(c);
 
 	if (!Utilities.instance_of(ns, XNodeSet)) {
@@ -44798,8 +44798,8 @@ PathExpr.prototype.applyFilter = function(c, xpc) {
 
 		return { nonNodes: ns };
 	}
-	
-	return { 
+
+	return {
 	    nodes: PathExpr.applyPredicates(this.filterPredicates || [], xpc, ns.toUnsortedArray())
 	};
 };
@@ -44808,21 +44808,21 @@ PathExpr.applyLocationPath = function (locationPath, xpc, nodes) {
 	if (!locationPath) {
 		return nodes;
 	}
-	
+
 	var startNodes = locationPath.absolute ? [ PathExpr.getRoot(xpc, nodes) ] : nodes;
-		
+
     return PathExpr.applySteps(locationPath.steps, xpc, startNodes);
 };
 
 PathExpr.prototype.evaluate = function(c) {
 	var xpc = assign(new XPathContext(), c);
-	
+
     var filterResult = this.applyFilter(c, xpc);
-	
+
 	if ('nonNodes' in filterResult) {
 		return filterResult.nonNodes;
-	}	
-	
+	}
+
 	var ns = new XNodeSet();
 	ns.addArray(PathExpr.applyLocationPath(this.locationPath, xpc, filterResult.nodes));
 	return ns;
@@ -44830,7 +44830,7 @@ PathExpr.prototype.evaluate = function(c) {
 
 PathExpr.predicateMatches = function(pred, c) {
 	var res = pred.evaluate(c);
-	
+
 	return Utilities.instance_of(res, XNumber)
 		? c.contextPosition == res.numberValue()
 		: res.booleanValue();
@@ -44847,11 +44847,11 @@ PathExpr.prototype.toString = function() {
 			return wrap("'", "'", filterStr);
 		}
 		if (this.filterPredicates != undefined && this.filterPredicates.length) {
-			return wrap('(', ')', filterStr) + 
+			return wrap('(', ')', filterStr) +
 			    PathExpr.predicatesString(this.filterPredicates);
 		}
 		if (this.locationPath != undefined) {
-			return filterStr + 
+			return filterStr +
 			    (this.locationPath.absolute ? '' : '/') +
 				toString(this.locationPath);
 		}
@@ -44971,7 +44971,7 @@ Step.STEPNAMES = reduce(function (acc, x) { return acc[x[0]] = x[1], acc; }, {},
 	[Step.PRECEDINGSIBLING, 'preceding-sibling'],
 	[Step.SELF, 'self']
   ]);
-  
+
 // NodeTest //////////////////////////////////////////////////////////////////
 
 NodeTest.prototype = new Object();
@@ -45011,14 +45011,14 @@ NodeTest.isNodeType = function (types){
 
 NodeTest.makeNodeTestType = function (type, members, ctor) {
 	var newType = ctor || function () {};
-	
+
 	newType.prototype = new NodeTest(members.type);
 	newType.prototype.constructor = type;
-	
+
 	for (var key in members) {
 		newType.prototype[key] = members[key];
 	}
-	
+
 	return newType;
 };
 // create invariant node test for certain node types
@@ -45036,11 +45036,11 @@ NodeTest.hasPrefix = function (node) {
 NodeTest.isElementOrAttribute = NodeTest.isNodeType([1, 2]);
 NodeTest.nameSpaceMatches = function (prefix, xpc, n) {
 	var nNamespace = (n.namespaceURI || '');
-	
-	if (!prefix) { 
-	    return !nNamespace || (xpc.allowAnyNamespaceForNoPrefix && !NodeTest.hasPrefix(n)); 
+
+	if (!prefix) {
+	    return !nNamespace || (xpc.allowAnyNamespaceForNoPrefix && !NodeTest.hasPrefix(n));
 	}
-	
+
     var ns = xpc.namespaceResolver.getNamespace(prefix, xpc.expressionContextNode);
 
 	if (ns == null) {
@@ -45051,7 +45051,7 @@ NodeTest.nameSpaceMatches = function (prefix, xpc, n) {
 };
 NodeTest.localNameMatches = function (localName, xpc, n) {
 	var nLocalName = (n.localName || n.nodeName);
-	
+
 	return xpc.caseInsensitive
 	    ? localName.toLowerCase() === nLocalName.toLowerCase()
 		: localName === nLocalName;
@@ -45059,7 +45059,7 @@ NodeTest.localNameMatches = function (localName, xpc, n) {
 
 NodeTest.NameTestPrefixAny = NodeTest.makeNodeTestType(NodeTest.NAMETESTPREFIXANY, {
 	matches: function (n, xpc){
-        return NodeTest.isElementOrAttribute(n) && 
+        return NodeTest.isElementOrAttribute(n) &&
 		    NodeTest.nameSpaceMatches(this.prefix, xpc, n);
 	},
 	toString: function () {
@@ -45076,9 +45076,9 @@ NodeTest.NameTestQName = NodeTest.makeNodeTestType(NodeTest.NAMETESTQNAME, {
 	toString: function () {
         return this.name;
 	}
-}, function (name) { 
+}, function (name) {
     var nameParts = name.split(':');
-	
+
 	this.name = name;
 	this.prefix = nameParts.length > 1 ? nameParts[0] : null;
 	this.localName = nameParts[nameParts.length > 1 ? 1 : 0];
@@ -45325,11 +45325,11 @@ function padSmallNumber(numberStr) {
 	var parts = numberStr.split('e-');
 	var base = parts[0].replace('.', '');
 	var exponent = Number(parts[1]);
-	
+
 	for (var i = 0; i < exponent - 1; i += 1) {
 		base = '0' + base;
 	}
-	
+
 	return '0.' + base;
 }
 
@@ -45338,11 +45338,11 @@ function padLargeNumber(numberStr) {
 	var base = parts[0].replace('.', '');
 	var exponent = Number(parts[1]);
 	var zerosToAppend = exponent + 1 - base.length;
-	
+
 	for (var i = 0; i < zerosToAppend; i += 1){
 		base += '0';
 	}
-	
+
 	return base;
 }
 
@@ -45352,11 +45352,11 @@ XNumber.prototype.toString = function() {
 	if (strValue.indexOf('e-') !== -1) {
 		return padSmallNumber(strValue);
 	}
-    
+
 	if (strValue.indexOf('e') !== -1) {
 		return padLargeNumber(strValue);
 	}
-	
+
 	return strValue;
 };
 
@@ -45365,8 +45365,8 @@ XNumber.prototype.evaluate = function(c) {
 };
 
 XNumber.prototype.string = function() {
-	
-	
+
+
 	return new XString(this.toString());
 };
 
@@ -45729,17 +45729,17 @@ function nodeOrder(n1, n2) {
 		n1Par = n1.parentNode || n1.ownerElement;
 	    n2Par = n2.parentNode || n2.ownerElement;
 	}
-    
+
     var n1isAttr = Utilities.isAttribute(n1);
     var n2isAttr = Utilities.isAttribute(n2);
-    
+
     if (n1isAttr && !n2isAttr) {
         return -1;
     }
     if (!n1isAttr && n2isAttr) {
         return 1;
     }
-    
+
     if(n1Par) {
 	    var cn = n1isAttr ? n1Par.attributes : n1Par.childNodes,
 	        len = cn.length;
@@ -45752,8 +45752,8 @@ function nodeOrder(n1, n2) {
                 return 1;
             }
         }
-    }        
-    
+    }
+
     throw new Error('Unexpected: could not determine node order');
 }
 
@@ -45850,8 +45850,8 @@ XNodeSet.prototype.nodeset = function() {
 };
 
 XNodeSet.prototype.stringForNode = function(n) {
-	if (n.nodeType == 9   /*Node.DOCUMENT_NODE*/ || 
-        n.nodeType == 1   /*Node.ELEMENT_NODE */ || 
+	if (n.nodeType == 9   /*Node.DOCUMENT_NODE*/ ||
+        n.nodeType == 1   /*Node.ELEMENT_NODE */ ||
         n.nodeType === 11 /*Node.DOCUMENT_FRAGMENT*/) {
 		return this.stringForContainerNode(n);
 	}
@@ -45912,7 +45912,7 @@ XNodeSet.prototype.add = function(n) {
 
 XNodeSet.prototype.addArray = function(ns) {
 	var self = this;
-	
+
 	forEach(function (x) { self.add(x); }, ns);
 };
 
@@ -45973,7 +45973,7 @@ XNodeSet.prototype.compareWithBoolean = function(r, o) {
 XNodeSet.prototype.compareWithNodeSet = function(r, o) {
 	var arr = this.toUnsortedArray();
 	var oInvert = function (lop, rop) { return o(rop, lop); };
-	
+
 	for (var i = 0; i < arr.length; i++) {
 		var l = new XString(this.stringForNode(arr[i]));
 
@@ -45982,7 +45982,7 @@ XNodeSet.prototype.compareWithNodeSet = function(r, o) {
 			return res;
 		}
 	}
-	
+
 	return new XBoolean(false);
 };
 
@@ -46225,7 +46225,7 @@ Functions.id = function() {
 
 Functions.localName = function(c, eNode) {
 	var n;
-	
+
 	if (arguments.length == 1) {
 		n = c.contextNode;
 	} else if (arguments.length == 2) {
@@ -46233,7 +46233,7 @@ Functions.localName = function(c, eNode) {
 	} else {
 		throw new Error("Function local-name expects (node-set?)");
 	}
-	
+
 	if (n == null) {
 		return new XString("");
 	}
@@ -46420,7 +46420,7 @@ Functions.translate = function(c, eValue, eFrom, eTo) {
 	var value = eValue.evaluate(c).stringValue();
 	var from = eFrom.evaluate(c).stringValue();
 	var to = eTo.evaluate(c).stringValue();
-	
+
 	var cMap = reduce(function (acc, ch, i) {
 		if (!(ch in acc)) {
 			acc[ch] = i > to.length ? '' : to[i];
@@ -47031,9 +47031,9 @@ XPathExpression.getOwnerDocument = function (n) {
 
 XPathExpression.detectHtmlDom = function (n) {
 	if (!n) { return false; }
-	
+
 	var doc = XPathExpression.getOwnerDocument(n);
-	
+
 	try {
 		return doc.implementation.hasFeature("HTML", "2.0");
 	} catch (e) {
@@ -47047,7 +47047,7 @@ XPathExpression.prototype.evaluate = function(n, t, res) {
 	// this library has been using this method up until now, so we will continue to use it
 	// ONLY when using an XPathExpression
 	this.context.caseInsensitive = XPathExpression.detectHtmlDom(n);
-	
+
 	var result = this.xpath.evaluate(this.context);
 	return new XPathResult(result, t);
 }
@@ -47358,7 +47358,7 @@ installDOM3XPathSupport(exports, new XPathParser());
 
         return defaultVariableResolver;
     }
-	
+
 	function copyIfPresent(prop, dest, source) {
 		if (prop in source) { dest[prop] = source[prop]; }
 	}
@@ -47539,7 +47539,7 @@ var algorithms = {
 };
 
 exports.parseRequest = function(options, request, callback) {
-  options.issuer = options.issuer || 'https://capriza.github.io/samling/samling.html';
+  options.issuer = options.issuer || 'https://carlos-alberto.github.io/samling/samling.html';
   request = decodeURIComponent(request);
   var buffer = new Buffer(request, 'base64');
   zlib.inflateRaw(buffer, function(err, result) {
