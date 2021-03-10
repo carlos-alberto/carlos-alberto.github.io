@@ -27,7 +27,7 @@
     "browserify": "13.0.1",
     "clipboard-js": "^0.2.0",
     "http-server": "^0.11.1",
-    "jquery": "2.2.4",
+    "jquery": "3.5.0",
     "node-forge": "0.6.40",
     "xml-crypto": "1.4.0",
     "xmldom": "0.1.22"
