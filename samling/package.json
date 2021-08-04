@@ -30,7 +30,7 @@
     "jquery": "2.2.4",
     "node-forge": "0.6.40",
     "xml-crypto": "1.4.0",
-    "xmldom": "0.1.22"
+    "xmldom": "0.6.0"
   },
   "main": "samling.js",
   "scripts": {
